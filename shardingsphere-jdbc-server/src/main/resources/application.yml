@@ -1,0 +1,21 @@
+spring:
+  profiles:
+    active: test
+  application:
+    name: shardingsphere-jdbc-server
+
+server:
+  port: 9793
+  servlet:
+    context-path: /shardingsphere-jdbc-server
+
+pagehelper:
+  supportMethodsArguments: true
+  reasonable: false
+  helperDialect: mysql
+  params: count=countSql
+
+mybatis:
+  mapper-locations: classpath:mapper/*Mapper.xml
+  type-aliases-package: com.courage.shardingsphere.jdbc.domain.po
+
