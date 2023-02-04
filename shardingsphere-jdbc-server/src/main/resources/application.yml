@@ -19,3 +19,6 @@ mybatis:
   mapper-locations: classpath:mapper/*Mapper.xml
   type-aliases-package: com.courage.shardingsphere.jdbc.domain.po
 
+logging:
+  config: classpath:logback-spring.xml
+

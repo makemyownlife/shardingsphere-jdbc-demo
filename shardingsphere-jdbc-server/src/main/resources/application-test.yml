@@ -36,6 +36,3 @@ spring:
       enabled: true
       max-file-size: 400MB
       max-request-size: 400MB
-
-logging:
-  config: classpath:logger/logback-test.xml
