@@ -3,22 +3,33 @@ spring:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8
 
-  #数据库
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/mytest?useUnicode=true&characterEncoding=UTF8&allowMultiQueries=true&serverTimezone=GMT%2B8&
-    username: root
-    password: ilxw
-    type: com.alibaba.druid.pool.DruidDataSource
-    druid:
-      max-active: 50
-      max-wait: 10000
-      min-idle: 5
-      initial-size: 5
-      validation-query: SELECT 1
-      test-on-borrow: false
-      test-while-idle: true
-      time-between-eviction-runs-millis: 18800
+  shardingsphere:
+    datasource:
+      names: master
+      master:
+        type: com.alibaba.druid.pool.DruidDataSource
+        driverClassName: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://127.0.0.1:3306/mytest?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2B8&useTimezone=true
+        username: root
+        password: ilxw
+    props:
+      # 日志显示SQL
+      sql.show: true
+    sharding:
+      tables:
+        # 订单表 分表：20
+        order:
+          # 真实表 order_0
+          actualDataNodes: master.order_$->{0..19}
+          # 分库策略
+          databaseStrategy:
+            none:
+          # 分表策略
+          tableStrategy:
+            inline:
+              shardingColumn: order_key
+              # 分片算法行表达式，需符合groovy语法 '& Integer.MAX_VALUE' 位运算使hash值为正数
+              algorithmExpression: order_$->{(order_key.hashCode() & Integer.MAX_VALUE) % 20}
 
   servlet:
     multipart:
