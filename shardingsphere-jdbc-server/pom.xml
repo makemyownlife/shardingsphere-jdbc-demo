@@ -48,7 +48,7 @@
                     </archive>
                     <excludes>
                         <exclude>application*.yml</exclude>
-                        <exclude>logger/logback*.xml</exclude>
+                        <exclude>logback*.xml</exclude>
                         <exclude>spring/spring*.xml</exclude>
                     </excludes>
                 </configuration>
