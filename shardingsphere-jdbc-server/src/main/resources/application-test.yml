@@ -3,18 +3,12 @@ spring:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8
 
-  redis:
-    type: single
-    single:
-      address: 10.1.86.119:6303
-      password: XGVKwO3s
-
   #数据库
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://10.1.86.119:33301/shuangjian?useUnicode=true&characterEncoding=UTF8&allowMultiQueries=true&serverTimezone=GMT%2B8&
-    username: xxl_job
-    password: 123456
+    url: jdbc:mysql://localhost:3306/mytest?useUnicode=true&characterEncoding=UTF8&allowMultiQueries=true&serverTimezone=GMT%2B8&
+    username: root
+    password: ilxw
     type: com.alibaba.druid.pool.DruidDataSource
     druid:
       max-active: 50
