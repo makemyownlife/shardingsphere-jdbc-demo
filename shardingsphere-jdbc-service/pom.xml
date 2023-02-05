@@ -21,14 +21,6 @@
         </dependency>
 
         <dependency>
-            <groupId>com.courage.training</groupId>
-            <artifactId>training-framework-redis</artifactId>
-            <scope>system</scope>
-            <version>1.0-SNAPSHOT</version>
-            <systemPath>${project.basedir}/../lib/training-framework-redis-1.0-SNAPSHOT.jar</systemPath>
-        </dependency>
-
-        <dependency>
             <groupId>com.github.xiaoymin</groupId>
             <artifactId>knife4j-spring-boot-starter</artifactId>
             <version>2.0.9</version>
