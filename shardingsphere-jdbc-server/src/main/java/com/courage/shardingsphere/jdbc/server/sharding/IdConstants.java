@@ -17,6 +17,9 @@ public class IdConstants {
 
     public final static int MAX_SEQ = 4095;
 
-    public final static String ID_REDIS_PFEFIX = "space:idGenerator:";
+    public final static String ID_REDIS_PFEFIX = "sharding:idGenerator:";
+
+    // 主键
+    public final static String PRIMARY_KEY = "id";
 
 }
