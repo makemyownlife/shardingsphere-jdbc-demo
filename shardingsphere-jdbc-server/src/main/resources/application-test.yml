@@ -36,18 +36,15 @@ spring:
     sharding:
       tables:
         # 订单表 分表：20
-        order:
+        t_ent_order:
           # 真实表 order_0
-          actualDataNodes: ds$->{0..3}.order_$->{0..19}
+          actualDataNodes: ds$->{0..3}.t_ent_order
           # 分库策略
           databaseStrategy:
             none:
           # 分表策略
           tableStrategy:
-            inline:
-              shardingColumn: order_key
-              # 分片算法行表达式，需符合groovy语法 '& Integer.MAX_VALUE' 位运算使hash值为正数
-              algorithmExpression: order_$->{(order_key.hashCode() & Integer.MAX_VALUE) % 20}
+            none:
 
   servlet:
     multipart:
