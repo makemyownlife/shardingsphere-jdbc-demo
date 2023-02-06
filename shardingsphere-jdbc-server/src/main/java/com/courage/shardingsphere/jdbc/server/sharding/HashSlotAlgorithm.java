@@ -9,14 +9,14 @@ import java.util.Collection;
 
 /**
  * 复合分片算法 :
- * 主键id 是雪花算法 , workerId = Math.abs(crc32(shardingKey)) % 1024
+ * 主键id 是雪花算法 , workerId = crc32(shardingKey) % 1024
  */
 public class HashSlotAlgorithm implements ComplexKeysShardingAlgorithm {
 
     private final static Logger logger = LoggerFactory.getLogger(HashSlotAlgorithm.class);
 
     @Override
-    public Collection<String> doSharding(Collection collection, ComplexKeysShardingValue complexKeysShardingValue) {
+    public Collection<String> doSharding(Collection availableTargetNames, ComplexKeysShardingValue complexKeysShardingValue) {
         String logicTableName = complexKeysShardingValue.getLogicTableName();
         return null;
     }

@@ -24,12 +24,7 @@ public class StringHashUtil {
             CRC32 crc32 = new CRC32();
             crc32.update(value.getBytes(CHARSET));
             long crcValue = crc32.getValue();
-            Long hash = null;
-            if (crcValue < 0) {
-                hash = Math.abs(hash) % 1024;
-            } else {
-                hash = crcValue % 1024;
-            }
+            Long hash = crcValue % 1024;
             return hash.intValue();
         } catch (Exception e) {
             logger.error("hashSlot value:" + value, e);
