@@ -5,6 +5,7 @@ spring:
 
   shardingsphere:
     datasource:
+      enabled: true
       names: ds0,ds1,ds2,ds3
       ds0:
         type: com.alibaba.druid.pool.DruidDataSource
@@ -37,11 +38,13 @@ spring:
       tables:
         # 订单表 分表：20
         t_ent_order:
-          # 真实表 order_0
+          # 真实表
           actualDataNodes: ds$->{0..3}.t_ent_order
           # 分库策略
           databaseStrategy:
-            none:
+            complex:
+              sharding-columns: id,ent_id
+              algorithm-class-name: com.courage.shardingsphere.jdbc.server.sharding.HashSlotAlgorithm
           # 分表策略
           tableStrategy:
             none:
