@@ -48,13 +48,14 @@ public class SnowFlakeIdGenerator {
     }
 
     /**
-     * 生成唯一的序号值（对老班级圈迁移的数据主键整合）
+     * 生成唯一的序号值
      *
      * @param id
      * @param workerId
      * @param seqId
      * @return
      */
+    @Deprecated
     public static long getOldUniqueId(long id, int workerId, int seqId) {
         if (workerId > MAX_WORKER_ID || workerId < 0) {
             throw new IllegalArgumentException("workerId is not Illegal");
