@@ -53,8 +53,7 @@
         )
     </insert>
 
-
-    <insert id="saveOrder" parameterType="com.courage.shardingsphere.jdbc.domain.po.TEntOrderItem">
+    <insert id="saveOrderItem" parameterType="com.courage.shardingsphere.jdbc.domain.po.TEntOrderItem">
         insert into t_ent_order_item
         (
             id,
@@ -62,7 +61,7 @@
             region_code ,
             good_id,
             good_name,
-            order_id
+            order_id,
             create_time,
             update_time
         )

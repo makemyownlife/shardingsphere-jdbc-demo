@@ -51,7 +51,7 @@ spring:
         # 订单条目表
         t_ent_order_item:
           # 真实表
-          actualDataNodes: ds$->{0..3}.t_ent_order_$->{0..7}
+          actualDataNodes: ds$->{0..3}.t_ent_order_item_$->{0..7}
           # 分库策略
           databaseStrategy:
             complex:
