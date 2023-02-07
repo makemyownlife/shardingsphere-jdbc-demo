@@ -43,8 +43,8 @@ spring:
           # 分库策略
           databaseStrategy:
             complex:
-              sharding-columns: id,ent_id
-              algorithm-class-name: com.courage.shardingsphere.jdbc.server.sharding.HashSlotAlgorithm
+              sharding-columns: id,ent_id,region_code
+              algorithm-class-name: com.courage.shardingsphere.jdbc.server.sharding.TwoCombineKeyAlgorithm
           # 分表策略
           tableStrategy:
             none:

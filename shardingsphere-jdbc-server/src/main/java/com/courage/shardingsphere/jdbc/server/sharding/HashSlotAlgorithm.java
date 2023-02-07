@@ -4,21 +4,29 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shardingsphere.api.sharding.complex.ComplexKeysShardingAlgorithm;
 import org.apache.shardingsphere.api.sharding.complex.ComplexKeysShardingValue;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
 /**
  * 复合分片算法 :
- * 主键id 是雪花算法 , workerId = crc32(shardingKey) % 1024
+ * 主键id 是雪花算法 workerId = crc32(shardingKey) % 1024
  */
 public class HashSlotAlgorithm implements ComplexKeysShardingAlgorithm {
+
+    public final static Logger logger = LoggerFactory.getLogger(HashSlotAlgorithm.class);
+
+    public HashSlotAlgorithm() {
+        logger.info("组合键数目：" + getCombineKeyLength() + " 路由主键编号:" + getQuerySnowFlakeIdColumn());
+    }
 
     @Override
     public Collection<String> doSharding(Collection availableTargetNames, ComplexKeysShardingValue complexKeysShardingValue) {
         List<Integer> slotList = new ArrayList<>();
-        //真实数据库数量
+        // 真实数据库数量
         int count = availableTargetNames.size();
-        //先判断是否走主键路由，若主键路由, 查询中到数据 按照主键路由 , 否则按照分表字段路由
+        // 先判断是否走主键路由，若主键路由, 查询中到数据 按照主键路由 , 否则按照分表字段路由
         boolean querySnowFlakeIdOK = false;
         String querySnowFlakeIdColumn = getQuerySnowFlakeIdColumn();
         if (StringUtils.isNotBlank(querySnowFlakeIdColumn)) {
@@ -30,8 +38,7 @@ public class HashSlotAlgorithm implements ComplexKeysShardingAlgorithm {
                 }
             }
         }
-
-        //若主键路由失败,则通过分表字段路由
+        // 若主键路由失败 , 则通过分片组合字段路由
         if (!querySnowFlakeIdOK) {
             List<String> values = doShardingValuesByShardingColumns(complexKeysShardingValue);
             if (CollectionUtils.isNotEmpty(values)) {
@@ -41,7 +48,6 @@ public class HashSlotAlgorithm implements ComplexKeysShardingAlgorithm {
                 }
             }
         }
-
         //返回结果
         List result = new ArrayList<>();
         for (Integer slot : slotList) {
@@ -51,8 +57,14 @@ public class HashSlotAlgorithm implements ComplexKeysShardingAlgorithm {
         return result;
     }
 
+    //默认是否查询id
     public String getQuerySnowFlakeIdColumn() {
-        return IdConstants.DEFAULT_PRIMARY_KEY;
+        return ShardingConstants.DEFAULT_PRIMARY_KEY;
+    }
+
+    //组合键数目 比如 sharding-columns:id,ent_id,region_code 组合键为：ent_id , region_code , 数目为 2
+    public int getCombineKeyLength() {
+        return ShardingConstants.DEFAULT_SINGLE_COMBINE_KEY_LENGTH;
     }
 
     private List<String> doShardingValuesByQuerySnowFlakeId(ComplexKeysShardingValue complexKeysShardingValue) {
@@ -62,42 +74,39 @@ public class HashSlotAlgorithm implements ComplexKeysShardingAlgorithm {
     }
 
     private List<String> doShardingValuesByShardingColumns(ComplexKeysShardingValue complexKeysShardingValue) {
-        //是否是单键
-        boolean singleKey = complexKeysShardingValue.getColumnNameAndShardingValuesMap().size() == 1 ? true : false;
+        int combineKeyLength = getCombineKeyLength();
+        List<String> shardingColumnsArray = getShardingColumnsArray(complexKeysShardingValue);
+        if (shardingColumnsArray.size() != combineKeyLength) {
+            return Collections.EMPTY_LIST;
+        }
         List<String> combinnationList = null;
         //单分片键
-        if (singleKey) {
-            combinnationList = doSingleSharding(complexKeysShardingValue);
+        if (combineKeyLength == ShardingConstants.DEFAULT_SINGLE_COMBINE_KEY_LENGTH) {
+            combinnationList = doSingleSharding(complexKeysShardingValue, shardingColumnsArray);
         }
         //多分片键
         else {
-            combinnationList = doMultiSharding(complexKeysShardingValue);
+            combinnationList = doMultiSharding(complexKeysShardingValue, shardingColumnsArray);
         }
         return combinnationList;
     }
 
-    private List<String> doSingleSharding(ComplexKeysShardingValue complexKeysShardingValue) {
-        List<String> shardingColumns = getShardingColumnsArray(complexKeysShardingValue);
-        String shardingColumn = shardingColumns.get(0);
+    private List<String> doSingleSharding(ComplexKeysShardingValue complexKeysShardingValue, List<String> shardingColumnsArray) {
+        String shardingColumn = shardingColumnsArray.get(0);
         List<String> valueList = getShardingValueListByColumn(shardingColumn, complexKeysShardingValue);
         return valueList;
     }
 
-    private List<String> doMultiSharding(ComplexKeysShardingValue complexKeysShardingValue) {
+    private List<String> doMultiSharding(ComplexKeysShardingValue complexKeysShardingValue, List<String> shardingColumnsArray) {
         List<List<String>> collection = new ArrayList<List<String>>();
-        List<String> shardingColumns = getShardingColumnsArray(complexKeysShardingValue);
-        for (int i = 0; i < shardingColumns.size(); i++) {
-            String shardingColumn = shardingColumns.get(i);
+        for (int i = 0; i < shardingColumnsArray.size(); i++) {
+            String shardingColumn = shardingColumnsArray.get(i);
             List<String> shardingValueList = getShardingValueListByColumn(shardingColumn, complexKeysShardingValue);
             if (shardingValueList != null && shardingValueList.size() > 0) {
                 collection.add(shardingValueList);
             }
         }
-        //若所有的分区键都有值的情况下 才会进行笛卡尔积组合
-        if (collection.size() == shardingColumns.size()) {
-            return StringHashUtil.descartes(collection);
-        }
-        return Collections.EMPTY_LIST;
+        return StringHashUtil.descartes(collection);
     }
 
     private List<String> getShardingValueListByColumn(String shardingColumn, ComplexKeysShardingValue complexKeysShardingValue) {
@@ -123,6 +132,8 @@ public class HashSlotAlgorithm implements ComplexKeysShardingAlgorithm {
         columnNameAndShardingValuesMap.forEach((key, values) -> {
             arr.add(key);
         });
+        //对分区键做一个排序，便于后续实现笛卡尔积
+        Collections.sort(arr);
         return arr;
     }
 

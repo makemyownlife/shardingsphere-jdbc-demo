@@ -3,7 +3,7 @@ package com.courage.shardingsphere.jdbc.server.sharding;
 public class SnowFlakeIdGenerator {
 
     //总的分区数
-    private final static int SHARDING_NUM = IdConstants.SHARDING_LENGTH;
+    private final static int SHARDING_NUM = ShardingConstants.SHARDING_LENGTH;
 
     //最大机器id 1023 也就是 1111111111
     private final static int MAX_WORKER_ID = SHARDING_NUM - 1;
