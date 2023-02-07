@@ -47,25 +47,6 @@ public class SnowFlakeIdGenerator {
         return ((timestamp - twepoch) << TIMESTAMP_LEFTSHIFT) | (workerId << WORKERID_SHIFT) | seqId;
     }
 
-    /**
-     * 生成唯一的序号值
-     *
-     * @param id
-     * @param workerId
-     * @param seqId
-     * @return
-     */
-    @Deprecated
-    public static long getOldUniqueId(long id, int workerId, int seqId) {
-        if (workerId > MAX_WORKER_ID || workerId < 0) {
-            throw new IllegalArgumentException("workerId is not Illegal");
-        }
-        if (seqId > MAX_SEQ || seqId < 0) {
-            throw new IllegalArgumentException("seqId is not Illegal ");
-        }
-        return 1L << 57 | ((id) << TIMESTAMP_LEFTSHIFT) | (workerId << WORKERID_SHIFT) | seqId;
-    }
-
     public static Integer getWorkerId(Long uniqueId) {
         Long workerId = (uniqueId >> 12) & 0x03ff;
         return workerId.intValue();
