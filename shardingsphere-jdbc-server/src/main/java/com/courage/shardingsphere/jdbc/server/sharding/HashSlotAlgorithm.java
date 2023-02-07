@@ -52,7 +52,7 @@ public class HashSlotAlgorithm implements ComplexKeysShardingAlgorithm {
     }
 
     public String getQuerySnowFlakeIdColumn() {
-        return IdConstants.PRIMARY_KEY;
+        return IdConstants.DEFAULT_PRIMARY_KEY;
     }
 
     private List<String> doShardingValuesByQuerySnowFlakeId(ComplexKeysShardingValue complexKeysShardingValue) {

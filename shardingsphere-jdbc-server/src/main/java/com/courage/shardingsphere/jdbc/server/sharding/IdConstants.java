@@ -20,6 +20,6 @@ public class IdConstants {
     public final static String ID_REDIS_PFEFIX = "sharding:idGenerator:";
 
     // 主键
-    public final static String PRIMARY_KEY = "id";
+    public final static String DEFAULT_PRIMARY_KEY = "id";
 
 }
