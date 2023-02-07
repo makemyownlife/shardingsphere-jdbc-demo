@@ -36,18 +36,38 @@ spring:
       sql.show: true
     sharding:
       tables:
-        # 订单表 分表：20
+        # 订单表基础表
         t_ent_order:
           # 真实表
           actualDataNodes: ds$->{0..3}.t_ent_order
           # 分库策略
           databaseStrategy:
             complex:
-              sharding-columns: id,ent_id,region_code
-              algorithm-class-name: com.courage.shardingsphere.jdbc.server.sharding.TwoCombineKeyAlgorithm
+              sharding-columns: id,ent_id
+              algorithm-class-name: com.courage.shardingsphere.jdbc.service.sharding.HashSlotAlgorithm
           # 分表策略
           tableStrategy:
             none:
+        # 订单条目表
+        t_ent_order_item:
+          # 真实表
+          actualDataNodes: ds$->{0..3}.t_ent_order_$->{0..7}
+          # 分库策略
+          databaseStrategy:
+            complex:
+              sharding-columns: id,ent_id
+              algorithm-class-name: com.courage.shardingsphere.jdbc.service.sharding.HashSlotAlgorithm
+          # 分表策略
+          tableStrategy:
+            complex:
+              sharding-columns: id,ent_id
+              algorithm-class-name: com.courage.shardingsphere.jdbc.service.sharding.HashSlotAlgorithm
+        # 订单详情表
+        t_ent_order_detail:
+          # 真实表
+          actualDataNodes: ds$->{0..3}.t_ent_order_detail
+      bindingTables:
+        - t_ent_order,t_ent_order_detail
 
   servlet:
     multipart:

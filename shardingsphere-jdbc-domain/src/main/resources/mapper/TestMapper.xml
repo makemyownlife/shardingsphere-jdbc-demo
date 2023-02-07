@@ -13,11 +13,71 @@
         <result column="update_time" property="updateTime"/>
     </resultMap>
 
-    <select id="getOrderById" parameterType="java.lang.Long" resultMap="BaseResultMap">
-        select *
+    <select id="getOrderDetailById" parameterType="java.lang.Long" resultMap="BaseResultMap">
+      select
+        a.id ,
+        a.ent_id,
+        a.region_code,
+        a.amount,
+        a.mobile,
+        a.create_time,
+        a.update_time
         FROM
-        t_ent_order t
-        where t.id = #{id}
+        t_ent_order a , t_ent_order_detail b
+        where
+        t.id = #{id}
+        and
+        a.id = b.order_id
     </select>
+
+    <insert id="saveOrder" parameterType="com.courage.shardingsphere.jdbc.domain.po.TEntOrder">
+        insert into t_ent_order
+        (
+            id,
+            ent_id,
+            region_code ,
+            amount,
+            mobile,
+            create_time,
+            update_time
+        )
+        values
+        (
+             #{id},
+             #{entId},
+             #{regionCode},
+             #{amount},
+             #{mobile},
+             now(),
+             now()
+        )
+    </insert>
+
+
+    <insert id="saveOrder" parameterType="com.courage.shardingsphere.jdbc.domain.po.TEntOrderItem">
+        insert into t_ent_order_item
+        (
+            id,
+            ent_id,
+            region_code ,
+            good_id,
+            good_name,
+            order_id
+            create_time,
+            update_time
+        )
+        values
+        (
+             #{id},
+             #{entId},
+             #{regionCode},
+             #{goodId},
+             #{goodName},
+             #{orderId},
+             now(),
+             now()
+        )
+    </insert>
+
 
 </mapper>

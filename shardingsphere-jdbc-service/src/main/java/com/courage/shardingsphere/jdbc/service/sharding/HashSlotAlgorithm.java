@@ -1,4 +1,4 @@
-package com.courage.shardingsphere.jdbc.server.sharding;
+package com.courage.shardingsphere.jdbc.service.sharding;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -16,10 +16,6 @@ import java.util.*;
 public class HashSlotAlgorithm implements ComplexKeysShardingAlgorithm {
 
     public final static Logger logger = LoggerFactory.getLogger(HashSlotAlgorithm.class);
-
-    public HashSlotAlgorithm() {
-        logger.info("组合键数目：" + getCombineKeyLength() + " 路由主键编号:" + getQuerySnowFlakeIdColumn());
-    }
 
     @Override
     public Collection<String> doSharding(Collection availableTargetNames, ComplexKeysShardingValue complexKeysShardingValue) {

@@ -8,4 +8,7 @@ public interface OrderMapper {
 
     TEntOrder getOrderById(Long id);
 
+
+    void saveOrder(TEntOrder entOrder);
+
 }

@@ -1,19 +1,24 @@
 package com.courage.shardingsphere.jdbc.domain.po;
 
-import java.math.BigDecimal;
 import java.util.Date;
 
-public class TEntOrder {
+/**
+ * 订单条目信息
+ * Created by zhangyong on 2023/2/7.
+ */
+public class TEntOrderItem {
 
     private Long id;
 
     private Long entId;
 
+    private Long orderId;
+
     private String regionCode;
 
-    private BigDecimal amount;
+    private String goodId;
 
-    private String mobile;
+    private String goodName;
 
     private Date createTime;
 
@@ -59,20 +64,27 @@ public class TEntOrder {
         this.updateTime = updateTime;
     }
 
-    public BigDecimal getAmount() {
-        return amount;
+    public Long getOrderId() {
+        return orderId;
     }
 
-    public void setAmount(BigDecimal amount) {
-        this.amount = amount;
+    public void setOrderId(Long orderId) {
+        this.orderId = orderId;
     }
 
-    public String getMobile() {
-        return mobile;
+    public String getGoodId() {
+        return goodId;
     }
 
-    public void setMobile(String mobile) {
-        this.mobile = mobile;
+    public void setGoodId(String goodId) {
+        this.goodId = goodId;
     }
 
+    public String getGoodName() {
+        return goodName;
+    }
+
+    public void setGoodName(String goodName) {
+        this.goodName = goodName;
+    }
 }

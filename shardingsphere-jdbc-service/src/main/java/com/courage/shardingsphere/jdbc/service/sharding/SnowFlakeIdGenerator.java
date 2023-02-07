@@ -1,4 +1,4 @@
-package com.courage.shardingsphere.jdbc.server.sharding;
+package com.courage.shardingsphere.jdbc.service.sharding;
 
 public class SnowFlakeIdGenerator {
 

@@ -26,6 +26,14 @@
             <version>2.0.9</version>
         </dependency>
 
+        <!-- shardingsphere jdbc start -->
+        <dependency>
+            <groupId>org.apache.shardingsphere</groupId>
+            <artifactId>sharding-jdbc-spring-boot-starter</artifactId>
+            <version>4.1.1</version>
+        </dependency>
+        <!-- shardingsphere jdbc end -->
+
     </dependencies>
 
 </project>

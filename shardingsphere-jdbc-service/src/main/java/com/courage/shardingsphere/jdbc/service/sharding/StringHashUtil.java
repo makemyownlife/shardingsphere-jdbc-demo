@@ -1,4 +1,4 @@
-package com.courage.shardingsphere.jdbc.server.sharding;
+package com.courage.shardingsphere.jdbc.service.sharding;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;

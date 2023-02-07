@@ -33,4 +33,13 @@ public class TestController {
         return ResponseEntity.successResult(tEntOrder);
     }
 
+
+    @GetMapping("/save")
+    @ApiOperation("save")
+    public ResponseEntity save() {
+        orderService.save();
+        return ResponseEntity.successResult(null);
+    }
+
+
 }
