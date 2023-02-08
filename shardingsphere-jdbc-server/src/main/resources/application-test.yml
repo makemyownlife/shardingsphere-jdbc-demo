@@ -3,6 +3,10 @@ spring:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8
 
+  redis:
+    host: 127.0.0.1
+    port: 6379
+
   shardingsphere:
     datasource:
       enabled: true

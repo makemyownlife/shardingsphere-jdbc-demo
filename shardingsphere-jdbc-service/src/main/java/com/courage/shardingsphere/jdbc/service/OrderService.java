@@ -3,19 +3,20 @@ package com.courage.shardingsphere.jdbc.service;
 import com.courage.shardingsphere.jdbc.domain.mapper.OrderMapper;
 import com.courage.shardingsphere.jdbc.domain.po.TEntOrder;
 import com.courage.shardingsphere.jdbc.domain.po.TEntOrderItem;
-import com.courage.shardingsphere.jdbc.service.sharding.SnowFlakeIdGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 public class OrderService {
 
     @Autowired
     private OrderMapper orderMapper;
+
+    @Autowired
+    private RedisIdGeneratorService redisIdGeneratorService;
 
     public TEntOrder getOrderById(Long id) {
         return orderMapper.getOrderById(id);
@@ -24,9 +25,8 @@ public class OrderService {
     @Transactional
     public void save() {
         Long entId = 5L;
-        AtomicInteger seq = new AtomicInteger(0);
         TEntOrder tEntOrder = new TEntOrder();
-        Long orderId = SnowFlakeIdGenerator.getUniqueId(entId.intValue(), seq.incrementAndGet());
+        Long orderId = redisIdGeneratorService.createUniqueId(String.valueOf(entId));
         System.out.println("orderId:" + orderId);
         tEntOrder.setId(orderId);
         tEntOrder.setRegionCode("BJ");
@@ -36,7 +36,7 @@ public class OrderService {
         orderMapper.saveOrder(tEntOrder);
         //保存条目 1
         TEntOrderItem item1 = new TEntOrderItem();
-        Long itemId = SnowFlakeIdGenerator.getUniqueId(entId.intValue(), seq.incrementAndGet());
+        Long itemId = redisIdGeneratorService.createUniqueId(String.valueOf(entId));
         item1.setId(itemId);
         item1.setEntId(entId);
         item1.setOrderId(orderId);
@@ -46,7 +46,7 @@ public class OrderService {
         orderMapper.saveOrderItem(item1);
         //保存条目 2
         TEntOrderItem item2 = new TEntOrderItem();
-        Long itemId2 = SnowFlakeIdGenerator.getUniqueId(entId.intValue(), seq.incrementAndGet());
+        Long itemId2 = redisIdGeneratorService.createUniqueId(String.valueOf(entId));
         item2.setId(itemId2);
         item2.setEntId(entId);
         item2.setRegionCode("BJ");
