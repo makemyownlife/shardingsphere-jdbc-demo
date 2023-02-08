@@ -1,7 +1,6 @@
 package com.courage.shardingsphere.jdbc.server.controller;
 
 import com.courage.shardingsphere.jdbc.common.result.ResponseEntity;
-import com.courage.shardingsphere.jdbc.domain.po.TEntOrder;
 import com.courage.shardingsphere.jdbc.service.OrderService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -11,6 +10,8 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Map;
 
 @Api(tags = "测试接口")
 @RestController
@@ -31,13 +32,12 @@ public class TestController {
         return ResponseEntity.successResult("mylife");
     }
 
-    @GetMapping("/getOrderById")
-    @ApiOperation("getOrderById")
-    public ResponseEntity getOrderById(String orderId) {
-        TEntOrder tEntOrder = orderService.getOrderById(Long.valueOf(orderId));
-        return ResponseEntity.successResult(tEntOrder);
+    @GetMapping("/queryOrder")
+    @ApiOperation("queryOrder")
+    public ResponseEntity queryOrder(String orderId) {
+        Map<String, Object> orderMap = orderService.queryOrder(Long.valueOf(orderId));
+        return ResponseEntity.successResult(orderMap);
     }
-
 
     @GetMapping("/save")
     @ApiOperation("save")

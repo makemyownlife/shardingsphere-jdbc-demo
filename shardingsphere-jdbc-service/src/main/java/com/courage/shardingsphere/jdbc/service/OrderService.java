@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.Map;
 
 @Service
 public class OrderService {
@@ -21,6 +22,10 @@ public class OrderService {
 
     public TEntOrder getOrderById(Long id) {
         return orderMapper.getOrderById(id);
+    }
+
+    public Map<String, Object> queryOrder(Long orderId) {
+        return orderMapper.queryOrder(orderId);
     }
 
     @Transactional

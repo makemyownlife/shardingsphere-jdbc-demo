@@ -13,23 +13,6 @@
         <result column="update_time" property="updateTime"/>
     </resultMap>
 
-    <select id="getOrderDetailById" parameterType="java.lang.Long" resultMap="BaseResultMap">
-      select
-        a.id ,
-        a.ent_id,
-        a.region_code,
-        a.amount,
-        a.mobile,
-        a.create_time,
-        a.update_time
-        FROM
-        t_ent_order a , t_ent_order_detail b
-        where
-        t.id = #{id}
-        and
-        a.id = b.order_id
-    </select>
-
     <insert id="saveOrder" parameterType="com.courage.shardingsphere.jdbc.domain.po.TEntOrder">
         insert into t_ent_order
         (
@@ -103,5 +86,23 @@
         )
     </insert>
 
+    <!-- 查询订单 -->
+    <select id="queryOrder" parameterType="java.lang.Long" resultType="java.util.HashMap">
+            select
+                    a.id ,
+                    a.ent_id,
+                    a.region_code,
+                    a.amount,
+                    a.mobile,
+                    a.create_time,
+                    a.update_time,
+                    b.address
+                    FROM
+                    t_ent_order a , t_ent_order_detail b
+                    where
+                    a.id = #{id}
+                    and
+                    a.id = b.order_id
+    </select>
 
 </mapper>
