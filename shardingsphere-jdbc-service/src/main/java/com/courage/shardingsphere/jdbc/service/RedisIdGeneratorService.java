@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * 编号生成器
  */
@@ -27,15 +29,13 @@ public class RedisIdGeneratorService {
         // 从本地缓冲中获取
         LocalSequence.SequenceEntity sequenceEntity = LocalSequence.getSeqEntity();
         if (sequenceEntity != null) {
-            return SnowFlakeIdGenerator.getUniqueId(
-                    sequenceEntity.getCurrentTime(),
-                    workerId,
-                    sequenceEntity.getSeq());
+            return SnowFlakeIdGenerator.getUniqueId(sequenceEntity.getCurrentTime(), workerId, sequenceEntity.getSeq());
         }
         // 从redis自增一个步长 , 放入本地内存中待用
         String idGeneratorKey = ShardingConstants.ID_REDIS_PFEFIX + currentTime;
-        redisTemplate.opsForValue().increment("incres", 5);
         Long counter = redisTemplate.opsForValue().increment(idGeneratorKey, ShardingConstants.STEP_LENGTH);
+        // 设置过期时间：120秒
+        redisTemplate.expire(idGeneratorKey, 120, TimeUnit.SECONDS);
         logger.warn("redisKey:{} 序号值:{} ", idGeneratorKey, counter);
         // 判断是否有极限情况 ,1ms产生的数据超过了最大序号，那么最有可能原因是 当前机器的时间钟不一样
         if (counter - ShardingConstants.STEP_LENGTH >= ShardingConstants.MAX_SEQ) {
@@ -53,10 +53,7 @@ public class RedisIdGeneratorService {
         if (sequenceEntity == null) {
             return null;
         }
-        Long uniqueId = SnowFlakeIdGenerator.getUniqueId(
-                sequenceEntity.getCurrentTime(),
-                workerId.intValue(),
-                sequenceEntity.getSeq());
+        Long uniqueId = SnowFlakeIdGenerator.getUniqueId(sequenceEntity.getCurrentTime(), workerId.intValue(), sequenceEntity.getSeq());
         return uniqueId;
     }
 
