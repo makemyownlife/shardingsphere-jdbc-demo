@@ -10,6 +10,8 @@ public class TEntOrderDetail {
 
     private Long id;
 
+    private Long orderId;
+
     private Long entId;
 
     private String regionCode;
@@ -76,6 +78,14 @@ public class TEntOrderDetail {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public Long getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(Long orderId) {
+        this.orderId = orderId;
     }
 
 }

@@ -36,7 +36,7 @@ spring:
         username: root
         password: ilxw
     props:
-      # 日志显示SQL
+      # 日志显示 SQL
       sql.show: true
     sharding:
       tables:
@@ -70,6 +70,16 @@ spring:
         t_ent_order_detail:
           # 真实表
           actualDataNodes: ds$->{0..3}.t_ent_order_detail
+          # 分库策略
+          databaseStrategy:
+             complex:
+                sharding-columns: id,ent_id
+                algorithm-class-name: com.courage.shardingsphere.jdbc.service.sharding.HashSlotAlgorithm
+          # 分表策略
+          tableStrategy:
+              complex:
+                sharding-columns: id,ent_id
+                algorithm-class-name: com.courage.shardingsphere.jdbc.service.sharding.HashSlotAlgorithm
       bindingTables:
         - t_ent_order,t_ent_order_detail
 
