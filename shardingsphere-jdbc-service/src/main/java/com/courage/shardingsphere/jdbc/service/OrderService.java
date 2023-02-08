@@ -42,7 +42,7 @@ public class OrderService {
         item1.setOrderId(orderId);
         item1.setRegionCode("BG");
         item1.setGoodId("aaaaaaaaaaaa");
-        item1.setGoodName("我的商品");
+        item1.setGoodName("我的商品111111");
         orderMapper.saveOrderItem(item1);
         //保存条目 2
         TEntOrderItem item2 = new TEntOrderItem();
@@ -52,7 +52,7 @@ public class OrderService {
         item2.setRegionCode("BJ");
         item2.setOrderId(orderId);
         item2.setGoodId("bbbbbbbbbbbb");
-        item2.setGoodName("我的商品");
+        item2.setGoodName("我的商品22222");
         orderMapper.saveOrderItem(item2);
     }
 
