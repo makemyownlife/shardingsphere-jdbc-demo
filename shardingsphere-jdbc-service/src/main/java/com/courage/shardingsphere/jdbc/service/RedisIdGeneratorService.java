@@ -27,7 +27,10 @@ public class RedisIdGeneratorService {
         // 从本地缓冲中获取
         LocalSequence.SequenceEntity sequenceEntity = LocalSequence.getSeqEntity();
         if (sequenceEntity != null) {
-            return SnowFlakeIdGenerator.getUniqueId(sequenceEntity.getCurrentTime(), workerId, sequenceEntity.getSeq());
+            return SnowFlakeIdGenerator.getUniqueId(
+                    sequenceEntity.getCurrentTime(),
+                    workerId,
+                    sequenceEntity.getSeq());
         }
         // 从redis自增一个步长 , 放入本地内存中待用
         String idGeneratorKey = ShardingConstants.ID_REDIS_PFEFIX + currentTime;
@@ -50,7 +53,10 @@ public class RedisIdGeneratorService {
         if (sequenceEntity == null) {
             return null;
         }
-        Long uniqueId = SnowFlakeIdGenerator.getUniqueId(sequenceEntity.getCurrentTime(), workerId.intValue(), sequenceEntity.getSeq());
+        Long uniqueId = SnowFlakeIdGenerator.getUniqueId(
+                sequenceEntity.getCurrentTime(),
+                workerId.intValue(),
+                sequenceEntity.getSeq());
         return uniqueId;
     }
 
