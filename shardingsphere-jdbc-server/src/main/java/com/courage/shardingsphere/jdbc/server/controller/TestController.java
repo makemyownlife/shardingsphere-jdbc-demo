@@ -28,7 +28,6 @@ public class TestController {
     @ApiOperation("test")
     public ResponseEntity test() {
         redisTemplate.opsForValue().set("hello", "myulife");
-        redisTemplate.opsForValue().increment("incres", 5);
         return ResponseEntity.successResult("mylife");
     }
 
