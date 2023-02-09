@@ -11,7 +11,7 @@ public class ShardingConstants {
     // %转换为&操作的换算数值
     public static final long AND_VALUE = PARTITION_LENGTH - 1;
 
-    public static final long STEP_LENGTH = 10;
+    public static final long STEP_LENGTH = 15;
 
     public static final int SEQ_EXPIRE_TIME = 60;
 

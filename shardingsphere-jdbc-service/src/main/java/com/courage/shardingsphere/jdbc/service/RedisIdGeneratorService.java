@@ -35,7 +35,7 @@ public class RedisIdGeneratorService {
         String idGeneratorKey = ShardingConstants.ID_REDIS_PFEFIX + currentTime;
         Long counter = redisTemplate.opsForValue().increment(idGeneratorKey, ShardingConstants.STEP_LENGTH);
         // 设置过期时间：120秒
-        redisTemplate.expire(idGeneratorKey, 120, TimeUnit.SECONDS);
+        redisTemplate.expire(idGeneratorKey, 180, TimeUnit.SECONDS);
         logger.warn("redisKey:{} 序号值:{} ", idGeneratorKey, counter);
         // 判断是否有极限情况 ,1ms产生的数据超过了最大序号，那么最有可能原因是 当前机器的时间钟不一样
         if (counter - ShardingConstants.STEP_LENGTH >= ShardingConstants.MAX_SEQ) {
