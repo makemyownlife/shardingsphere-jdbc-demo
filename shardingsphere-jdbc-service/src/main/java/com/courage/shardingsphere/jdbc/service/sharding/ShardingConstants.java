@@ -13,7 +13,7 @@ public class ShardingConstants {
 
     public static final long STEP_LENGTH = 15;
 
-    public static final int SEQ_EXPIRE_TIME = 60;
+    public static final int SEQ_EXPIRE_TIME = 120;
 
     public final static int MAX_SEQ = 4095;
 
