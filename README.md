@@ -222,7 +222,7 @@ shardingsphere:
 
 首先需要做**历史数据全量同步**：也就是将旧库（ 4个实例，每个实例 16 张表）迁移到新库（ 8 个实例，每个实例 64 张表）。
 
-通常的做法是：单独一个服务，使用游标的方式从旧库分片 select 语句，经过 rehash 后批量插入 （batch insert）到新库，需要配置jdbc连接串参数 rewriteBatchedStatements=true 才能使批处理操作生效。
+通常的做法是：单独一个服务，使用游标的方式从旧库分片 select 语句，经过 rehash 后批量插入 （batch insert）到新库，需要配置jdbc 连接串参数 rewriteBatchedStatements=true 才能使批处理操作生效。
 
 另外特别需要注意的是，历史数据也会存在不断的更新，如果先开启历史数据全量同步，则刚同步完成的数据有可能不是最新的。
 
