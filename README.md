@@ -230,7 +230,7 @@ shardingsphere:
 
 增量数据同步考虑到灰度切流稳定性、容灾 和 可回滚能力 ，采用实时双向同步方案，切流过程中一旦新库出现稳定性问题或者新库出现数据一致问题，可快速回滚切回旧库，保证数据库的稳定和数据可靠。
 
-![](https://oscimg.oschina.net/oscnet/up-285310b53ab103296ccb94dbd5cc68f4b98.webp)
+![](https://oscimg.oschina.net/oscnet/up-3de1ad6f4801271f1836cd59a9b2f056bfb.png)
 
 增量数据实时同步的大体思路 ：
 
