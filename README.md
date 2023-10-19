@@ -1,3 +1,5 @@
+![](https://javayong.cn/pics/shipinhao/gongzhonghaonew.png)
+
 ## 1 创建数据库
 
 ![](https://oscimg.oschina.net/oscnet/up-c9971a2fa253252d45c65a54b4fd07eb1f6.png)
