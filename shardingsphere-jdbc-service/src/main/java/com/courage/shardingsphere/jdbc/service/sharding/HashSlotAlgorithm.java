@@ -31,5 +31,5 @@ public class HashSlotAlgorithm implements ComplexKeysShardingAlgorithm {
     public Collection<String> doSharding(Collection collection, ComplexKeysShardingValue complexKeysShardingValue) {
         return null;
     }
-    
+
 }
