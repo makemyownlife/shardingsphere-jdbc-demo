@@ -34,8 +34,8 @@
         <!-- shardingsphere jdbc start -->
         <dependency>
             <groupId>org.apache.shardingsphere</groupId>
-            <artifactId>sharding-jdbc-spring-boot-starter</artifactId>
-            <version>4.1.1</version>
+            <artifactId>shardingsphere-jdbc-core-spring-boot-starter</artifactId>
+            <version>5.1.2</version>
         </dependency>
         <!-- shardingsphere jdbc end -->
 
