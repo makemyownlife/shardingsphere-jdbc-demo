@@ -29,16 +29,16 @@ rules:
     tables:
       t_ent_order:
         actualDataNodes: ds$->{0..3}.t_ent_order
-        tableStrategy:
-          standard:
-            shardingColumn: order_id
-            shardingAlgorithmName: t_order_inline
+        databaseStrategy:
+          complex:
+            shardingColumns: id,ent_id
+            shardingAlgorithmName: hash-slot-algorithm
       t_ent_order_detail:
         actualDataNodes: ds$->{0..3}.t_ent_order_detail
-        tableStrategy:
-          standard:
-            shardingColumn: order_id
-            shardingAlgorithmName: t_order_inline
+        databaseStrategy:
+          complex:
+            shardingColumns:  id,ent_id
+            shardingAlgorithmName: hash-slot-algorithm
       t_order_item:
         actualDataNodes: ds_${0..1}.t_order_item_${0..1}
         tableStrategy:
