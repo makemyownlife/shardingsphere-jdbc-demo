@@ -16,13 +16,8 @@ public class HashSlotAlgorithm implements ComplexKeysShardingAlgorithm {
     public final static Logger logger = LoggerFactory.getLogger(HashSlotAlgorithm.class);
 
     @Override
-    public Properties getProps() {
-        return null;
-    }
-
-    @Override
     public void init(Properties properties) {
-
+        logger.info("begin to load");
     }
 
     @Override

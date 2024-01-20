@@ -1,0 +1,53 @@
+mode:
+  type: Standalone
+  repository:
+    type: JDBC
+
+dataSources:
+  ds_0:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driverClassName: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/ds_0?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2B8&useTimezone=true
+    username: root
+    password: ilxw
+  ds_1:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driverClassName: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/ds_1?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2B8&useTimezone=true
+    username: root
+    password: ilxw
+  ds_2:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driverClassName: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/ds_2?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2B8&useTimezone=true
+    username: root
+    password: ilxw
+  ds_3:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driverClassName: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/ds_3?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2B8&useTimezone=true
+    username: root
+    password: ilxw
+
+rules:
+  - !SHARDING
+    tables:
+      # 订单表基础表
+      t_ent_order:
+        actualDataNodes: ds$->{0..3}.t_ent_order
+        # 分库策略
+        databaseStrategy:
+            complex:
+              sharding-columns: id,ent_id
+              shardingAlgorithmName: com.courage.shardingsphere.jdbc.service.sharding.HashSlotAlgorithm
+        tableStrategy:
+          none:
+    shardingAlgorithms:
+      hash-slot-algorithm:
+        type: CLASS_BASED
+        props:
+          strategy: complex
+          algorithmClassName: com.courage.shardingsphere.jdbc.service.sharding.HashSlotAlgorithm
+
+props:
+  sql-show: true
