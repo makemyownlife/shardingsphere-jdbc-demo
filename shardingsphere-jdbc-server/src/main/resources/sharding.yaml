@@ -69,12 +69,14 @@ rules:
         type: INLINE
         props:
           algorithm-expression: t_account_${account_id % 2}
+      hash-slot-algorithm:
+        type: CLASS_BASED
+        props:
+          strategy: complex
+          algorithmClassName: com.courage.shardingsphere.jdbc.service.sharding.HashSlotAlgorithm
     keyGenerators:
       snowflake:
         type: SNOWFLAKE
-    auditors:
-      sharding_key_required_auditor:
-        type: DML_SHARDING_CONDITIONS
 
   - !BROADCAST
     tables:
