@@ -39,6 +39,7 @@ rules:
       # 订单详情表
       t_ent_order_detail:
         actualDataNodes: ds$->{0..3}.t_ent_order_detail
+        # 分库策略
         databaseStrategy:
           complex:
             shardingColumns:  id,ent_id
@@ -46,18 +47,21 @@ rules:
       # 订单条目表
       t_ent_order_item:
         actualDataNodes: ds$->{0..3}.t_ent_order_item_$->{0..7}
+        # 分库策略
         databaseStrategy:
           complex:
             shardingColumns: id,ent_id
             shardingAlgorithmName: hash-slot-algorithm
+        # 分表策略
         tableStrategy:
           complex:
             shardingColumns: id,ent_id
             shardingAlgorithmName: hash-slot-algorithm
-
+    # 绑定表
     bindingTables:
       - t_ent_order,t_ent_order_detail
 
+    # 分片算法
     shardingAlgorithms:
       hash-slot-algorithm:
         type: CLASS_BASED
@@ -65,10 +69,7 @@ rules:
           strategy: complex
           algorithmClassName: com.courage.shardingsphere.jdbc.service.sharding.HashSlotAlgorithm
 
-    keyGenerators:
-      snowflake:
-        type: SNOWFLAKE
-
+  # 广播
   - !BROADCAST
     tables:
       - t_address
