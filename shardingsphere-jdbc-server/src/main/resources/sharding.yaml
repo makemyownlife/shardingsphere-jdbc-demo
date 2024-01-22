@@ -27,53 +27,44 @@ dataSources:
 rules:
   - !SHARDING
     tables:
+      # 订单表基础表
       t_ent_order:
+        # 真实表
         actualDataNodes: ds$->{0..3}.t_ent_order
+        # 分库策略
         databaseStrategy:
           complex:
             shardingColumns: id,ent_id
             shardingAlgorithmName: hash-slot-algorithm
+      # 订单详情表
       t_ent_order_detail:
         actualDataNodes: ds$->{0..3}.t_ent_order_detail
         databaseStrategy:
           complex:
             shardingColumns:  id,ent_id
             shardingAlgorithmName: hash-slot-algorithm
-      t_order_item:
-        actualDataNodes: ds_${0..1}.t_order_item_${0..1}
+      # 订单条目表
+      t_ent_order_item:
+        actualDataNodes: ds$->{0..3}.t_ent_order_item_$->{0..7}
+        databaseStrategy:
+          complex:
+            shardingColumns: id,ent_id
+            shardingAlgorithmName: hash-slot-algorithm
         tableStrategy:
-          standard:
-            shardingColumn: order_id
-            shardingAlgorithmName: t_order_item_inline
-        keyGenerateStrategy:
-          column: order_item_id
-          keyGeneratorName: snowflake
+          complex:
+            shardingColumns: id,ent_id
+            shardingAlgorithmName: hash-slot-algorithm
 
     bindingTables:
       - t_ent_order,t_ent_order_detail
 
     shardingAlgorithms:
-      database_inline:
-        type: INLINE
-        props:
-          algorithm-expression: ds_${user_id % 2}
-      t_order_inline:
-        type: INLINE
-        props:
-          algorithm-expression: t_order_${order_id % 2}
-      t_order_item_inline:
-        type: INLINE
-        props:
-          algorithm-expression: t_order_item_${order_id % 2}
-      t_account_inline:
-        type: INLINE
-        props:
-          algorithm-expression: t_account_${account_id % 2}
       hash-slot-algorithm:
         type: CLASS_BASED
         props:
           strategy: complex
           algorithmClassName: com.courage.shardingsphere.jdbc.service.sharding.HashSlotAlgorithm
+
     keyGenerators:
       snowflake:
         type: SNOWFLAKE
@@ -83,4 +74,5 @@ rules:
       - t_address
 
 props:
+  # 日志显示 SQL
   sql-show: true
