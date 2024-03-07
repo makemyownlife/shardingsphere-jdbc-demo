@@ -26,11 +26,13 @@ public class ShardingSphere4Example {
         TableRuleConfiguration orderTableRuleConfig = new TableRuleConfiguration("t_order", "ds0.t_order_$->{0..1}");
         // 指定表的分片策略（分片字段+分片算法）
         orderTableRuleConfig.setTableShardingStrategyConfig(new InlineShardingStrategyConfiguration("order_id", "t_order_$->{order_id % 2}"));
-        // 分片规则
+
+        // 3. 分片规则
         ShardingRuleConfiguration shardingRuleConfig = new ShardingRuleConfiguration();
         //将表的分片规则加入到分片规则列表
         shardingRuleConfig.getTableRuleConfigs().add(orderTableRuleConfig);
 
+        // 4. 配置一些属性
         Properties props = new Properties();
         //输出sql
         props.put(ConfigurationPropertyKey.SQL_SHOW.getKey(), true);
@@ -41,9 +43,8 @@ public class ShardingSphere4Example {
 
         Connection connection = dataSource.getConnection();
         connection.setAutoCommit(false);
-        /**
-         * 测试向t_order表插入8条数据，8条数据会分散到2个表
-         */
+
+        // 6. 测试向t_order表插入8条数据，8条数据会分散到2个表
         PreparedStatement ps = connection.prepareStatement("insert into t_order (order_id,user_id,price) values (?,?,?)");
         for (long i = 1; i <= 8; i++) {
             int j = 1;
