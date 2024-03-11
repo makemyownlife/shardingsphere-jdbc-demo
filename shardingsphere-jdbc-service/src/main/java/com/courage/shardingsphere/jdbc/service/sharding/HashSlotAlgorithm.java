@@ -2,9 +2,8 @@ package com.courage.shardingsphere.jdbc.service.sharding;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.shardingsphere.api.sharding.complex.ComplexKeysShardingAlgorithm;
-import org.apache.shardingsphere.api.sharding.complex.ComplexKeysShardingValue;
-import org.apache.shardingsphere.underlying.common.exception.ShardingSphereException;
+import org.apache.shardingsphere.sharding.api.sharding.complex.ComplexKeysShardingAlgorithm;
+import org.apache.shardingsphere.sharding.api.sharding.complex.ComplexKeysShardingValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,12 +18,18 @@ public class HashSlotAlgorithm implements ComplexKeysShardingAlgorithm {
     public final static Logger logger = LoggerFactory.getLogger(HashSlotAlgorithm.class);
 
     @Override
+    public void init(Properties properties) {
+        logger.info("begin to init HashSlotAlgorithm ");
+    }
+
+    @Override
     public Collection<String> doSharding(Collection availableTargetNames, ComplexKeysShardingValue complexKeysShardingValue) {
         List<Integer> slotList = new ArrayList<>();
         // 真实分片数量
         int count = availableTargetNames.size();
         if ((count & (count - 1)) != 0) {
-            throw new ShardingSphereException("分区数必须是2的次幂,当前分区数是:" + count);
+            throw new RuntimeException("分区数必须是2的次幂,当前分区数是:" + count) {
+            };
         }
         // 先判断是否走主键路由，若主键路由, 查询中到数据 按照主键路由 , 否则按照分表字段路由
         boolean querySnowFlakeIdOK = false;
