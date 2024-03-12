@@ -1,0 +1,90 @@
+spring:
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+
+  redis:
+    host: 127.0.0.1
+    port: 6379
+
+  shardingsphere:
+    datasource:
+      enabled: true
+      names: ds0,ds1,ds2,ds3
+      ds0:
+        type: com.alibaba.druid.pool.DruidDataSource
+        driverClassName: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://127.0.0.1:3306/ds_0?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2B8&useTimezone=true
+        username: root
+        password: ilxw
+      ds1:
+        type: com.alibaba.druid.pool.DruidDataSource
+        driverClassName: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://127.0.0.1:3306/ds_1?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2B8&useTimezone=true
+        username: root
+        password: ilxw
+      ds2:
+        type: com.alibaba.druid.pool.DruidDataSource
+        driverClassName: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://127.0.0.1:3306/ds_2?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2B8&useTimezone=true
+        username: root
+        password: ilxw
+      ds3:
+        type: com.alibaba.druid.pool.DruidDataSource
+        driverClassName: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://127.0.0.1:3306/ds_3?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2B8&useTimezone=true
+        username: root
+        password: ilxw
+    props:
+      # 日志显示 SQL
+      sql.show: true
+    sharding:
+      tables:
+        # 订单表基础表
+        t_ent_order:
+          # 真实表
+          actualDataNodes: ds$->{0..3}.t_ent_order
+          # 分库策略
+          databaseStrategy:
+            complex:
+              sharding-columns: id,ent_id
+              algorithm-class-name: cn.javayong.shardingjdbc4.spring.common.sharding.HashSlotAlgorithm
+          # 分表策略
+          tableStrategy:
+            none:
+        # 订单条目表
+        t_ent_order_item:
+          # 真实表
+          actualDataNodes: ds$->{0..3}.t_ent_order_item_$->{0..7}
+          # 分库策略
+          databaseStrategy:
+            complex:
+              sharding-columns: id,ent_id
+              algorithm-class-name: cn.javayong.shardingjdbc4.spring.common.sharding.HashSlotAlgorithm
+          # 分表策略
+          tableStrategy:
+            complex:
+              sharding-columns: id,ent_id
+              algorithm-class-name: cn.javayong.shardingjdbc4.spring.common.sharding.HashSlotAlgorithm
+        # 订单详情表
+        t_ent_order_detail:
+          # 真实表
+          actualDataNodes: ds$->{0..3}.t_ent_order_detail
+          # 分库策略
+          databaseStrategy:
+             complex:
+                sharding-columns: id,ent_id
+                algorithm-class-name: cn.javayong.shardingjdbc4.spring.common.sharding.HashSlotAlgorithm
+          # 分表策略
+          tableStrategy:
+              complex:
+                sharding-columns: id,ent_id
+                algorithm-class-name: cn.javayong.shardingjdbc4.spring.common.sharding.HashSlotAlgorithm
+      bindingTables:
+        - t_ent_order,t_ent_order_detail
+
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 400MB
+      max-request-size: 400MB

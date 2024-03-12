@@ -1,12 +1,11 @@
 ![](https://javayong.cn/pics/shipinhao/gongzhonghaonew.png)
 
-> http://localhost:9793/shardingsphere-jdbc-server/doc.html#/home
 ## 1 创建数据库
 
 ![](https://oscimg.oschina.net/oscnet/up-c9971a2fa253252d45c65a54b4fd07eb1f6.png)
 
 - 首先在navicat中，创建4个库，分别是：ds_0，ds_1，ds_2，ds_3 ;
-- 在 doc 文档中 ，分别在 4个库里执行 shardingjdbc-spring.sql 语句 ，执行后效果见上图 。
+- 在 doc 文档中 ，分别在 4个库里执行 init.sql 语句 ，执行后效果见上图 。
 
 我们还是以订单表举例 ，当用户创建一条记录 ， 会生成如下记录：
 

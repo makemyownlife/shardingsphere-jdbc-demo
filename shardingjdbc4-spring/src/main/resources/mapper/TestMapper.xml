@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.javayong.shardingjdbc4.spring.domain.mapper.OrderMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="cn.javayong.shardingjdbc4.spring.domain.po.TEntOrder">
+        <id column="id" property="id"/>
+        <result column="ent_id" property="entId"/>
+        <result column="region_code" property="regionCode"/>
+        <result column="amount" property="amount"/>
+        <result column="mobile" property="mobile"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <insert id="saveOrder" parameterType="cn.javayong.shardingjdbc4.spring.domain.po.TEntOrder">
+        insert into t_ent_order
+        (
+            id,
+            ent_id,
+            region_code ,
+            amount,
+            mobile,
+            create_time,
+            update_time
+        )
+        values
+        (
+             #{id},
+             #{entId},
+             #{regionCode},
+             #{amount},
+             #{mobile},
+             now(),
+             now()
+        )
+    </insert>
+
+    <insert id="saveOrderDetail" parameterType="cn.javayong.shardingjdbc4.spring.domain.po.TEntOrderDetail">
+        insert into t_ent_order_detail
+        (
+            id,
+            order_id,
+            ent_id,
+            region_code ,
+            address,
+            status,
+            create_time,
+            update_time
+        )
+        values
+        (
+             #{id},
+             #{orderId},
+             #{entId},
+             #{regionCode},
+             #{address},
+             #{status},
+             now(),
+             now()
+        )
+    </insert>
+
+    <insert id="saveOrderItem" parameterType="cn.javayong.shardingjdbc4.spring.domain.po.TEntOrderItem">
+        insert into t_ent_order_item
+        (
+            id,
+            ent_id,
+            region_code ,
+            good_id,
+            good_name,
+            order_id,
+            create_time,
+            update_time
+        )
+        values
+        (
+             #{id},
+             #{entId},
+             #{regionCode},
+             #{goodId},
+             #{goodName},
+             #{orderId},
+             now(),
+             now()
+        )
+    </insert>
+
+    <!-- 查询订单 -->
+    <select id="queryOrder" parameterType="java.lang.Long" resultType="java.util.HashMap">
+            select
+                    a.id ,
+                    a.ent_id,
+                    a.region_code,
+                    a.amount,
+                    a.mobile,
+                    a.create_time,
+                    a.update_time,
+                    b.address
+                    FROM
+                    t_ent_order a , t_ent_order_detail b
+                    where
+                    a.id = #{id}
+                    and
+                    a.id = b.order_id
+    </select>
+
+</mapper>
