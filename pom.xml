@@ -15,6 +15,9 @@
         <module>shardingsphere-jdbc-domain</module>
         <module>shardingsphere-jdbc-server</module>
         <module>shardingsphere-jdbc-common</module>
+        <module>shardingjdbc4-spring</module>
+        <module>shardingjdbc5-spring</module>
+        <module>shardingjdbc-common</module>
     </modules>
 
     <properties>
@@ -237,33 +240,6 @@
         </dependencies>
 
     </dependencyManagement>
-
-    <profiles>
-        <!--开发环境-->
-        <profile>
-            <id>dev</id>
-            <properties>
-                <spring.profiles.active>dev</spring.profiles.active>
-            </properties>
-        </profile>
-        <!--内测环境-->
-        <profile>
-            <id>test</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <properties>
-                <spring.profiles.active>test</spring.profiles.active>
-            </properties>
-        </profile>
-        <!--生产环境-->
-        <profile>
-            <id>prod</id>
-            <properties>
-                <spring.profiles.active>prod</spring.profiles.active>
-            </properties>
-        </profile>
-    </profiles>
 
     <repositories>
 
