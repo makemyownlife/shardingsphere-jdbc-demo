@@ -43,8 +43,8 @@ public class TestController {
     @GetMapping("/save")
     @ApiOperation("save")
     public ResponseEntity save() {
-        orderService.save();
-        return ResponseEntity.successResult(null);
+        Long orderId = orderService.save();
+        return ResponseEntity.successResult(orderId);
     }
 
 

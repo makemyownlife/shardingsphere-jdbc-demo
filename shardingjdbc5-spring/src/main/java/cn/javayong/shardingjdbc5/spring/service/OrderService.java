@@ -29,7 +29,7 @@ public class OrderService {
     }
 
     @Transactional
-    public void save() {
+    public Long save() {
         Long entId = 5L;
         String regionCode = "BJ";
 
@@ -77,6 +77,7 @@ public class OrderService {
             item2.setGoodName("我的商品22222");
             orderMapper.saveOrderItem(item2);
         }
+        return orderId;
     }
 
 }
