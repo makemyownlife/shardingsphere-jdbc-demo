@@ -1,169 +1,111 @@
 ![](https://javayong.cn/pics/shipinhao/gongzhonghaonew.png)
 
-> http://localhost:9793/shardingsphere-jdbc-server/doc.html#/home
-## 1 创建数据库
+本项目了实现了 shardingsphere JDBC 4.x 、5.x 分片例子，本文档重点讲解 shardingsphere JDBC 4.x 如何整合 spring。 
 
-![](https://oscimg.oschina.net/oscnet/up-c9971a2fa253252d45c65a54b4fd07eb1f6.png)
+# 1 业务分析
 
-- 首先在navicat中，创建4个库，分别是：ds_0，ds_1，ds_2，ds_3 ;
-- 在 doc 文档中 ，分别在 4个库里执行 shardingjdbc-spring.sql 语句 ，执行后效果见上图 。
+笔者曾经为武汉一家 O2O 公司订单服务做过分库分表架构设计 ，当企业用户创建一条采购订单 ， 会生成如下记录：
 
-我们还是以订单表举例 ，当用户创建一条记录 ， 会生成如下记录：
+- 订单基础表 **t_ent_order**  ：单条记录
 
-1. 订单基础表 ： t_ent_order 表 , 1条记录 ；
-2. 订单详情表：  t_ent_order_detail ，1条记录；
-3. 订单明细表：  t_ent_order_item , 多条记录 。
+- 订单详情表 **t_ent_order_detail**  ：单条记录
 
-那我们使用怎样的分库分表策略呢 ？
+- 订单明细表 **t_ent_order_item：N**  条记录
 
-1. 订单基础表 t_ent_order 按照 ent_id (企业编号) 分库 ，订单详情表保持一致；
-2. 订单明细表 t_ent_order_item 按照 ent_id (企业编号) 分库 ， 同时也要分表 。
+订单每年预估生成记录 1 亿条，数据量不大也不小，笔者参考原来神州专车的分库分表方式，制定了如下的分库分表策略：
 
-## 2 使用shardingsphere jdbc 
+- 订单基础表按照 ent_id (企业用户编号) 分库（四个分库），订单详情表保持一致。
+- 订单明细表按照 ent_id (企业用户编号) 分库 (四个分库)，同时也要按照 ent_id (企业编号) 分表(八个分表)。
 
-首先配置依赖：
+# 2 环境准备
+
+创建 4 个库，分别是：ds_0、ds_1、ds_2、ds_3  。
+
+然后这四个分库分别执行 doc 目录下的 **shardingjdbc-spring.sql** 文件。
+
+![](https://www.javayong.cn/pics/sharding/shardingjdbcspringsql.png)
+
+执行结果如下图所示，**每个分库都包含订单基础表 ， 订单详情表 ，订单明细表 。但是因为明细表需要分表，所以包含多张表。**
+
+![](https://www.javayong.cn/pics/sharding/shardingtablesdemo.png)
+
+# 3 项目结构
+
+打开项目，如下图所示：
+
+![](https://www.javayong.cn/pics/sharding/4projectshow.png?4)
+
+这是一个典型的 springboot 项目，包含控制器层、实体层、服务层 。
+
+**1、pom 文件配置依赖**
 
 ```xml
-<!-- shardingsphere jdbc start -->
 <dependency>
     <groupId>org.apache.shardingsphere</groupId>
     <artifactId>sharding-jdbc-spring-boot-starter</artifactId>
     <version>4.1.1</version>
 </dependency>
-<!-- shardingsphere jdbc end -->
 ```
 
-重点强调， 原来分库分表之前， 很多 springboot 工程依赖 druid ，必须要删除如下的依赖：
+**2、分片配置 application-test.yml**
 
-```xml
-<dependency>
-    <groupId>com.alibaba</groupId>
-    <artifactId>druid-spring-boot-starter</artifactId>
-</dependency>
-```
+![](https://www.javayong.cn/pics/sharding/shardingyaml.png)
 
-在配置文件中配置如下：
+- 配置数据源，上面配置数据源是： ds0、ds1、ds2、ds3 ；
+- 配置打印日志，也就是：sql.show ，在测试环境建议打开 ，便于调试；
+- 配置哪些表需要分库分表 ，在 shardingsphere.datasource.sharding.tables 节点下面配置：
 
-```xml
-shardingsphere:
-  datasource:
-    enabled: true
-    names: ds0,ds1,ds2,ds3
-    ds0:
-      type: com.alibaba.druid.pool.DruidDataSource
-      driverClassName: com.mysql.cj.jdbc.Driver
-      url: jdbc:mysql://127.0.0.1:3306/ds_0?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2B8&useTimezone=true
-      username: root
-      password: ilxw
-    ds1:
-      type: com.alibaba.druid.pool.DruidDataSource
-      driverClassName: com.mysql.cj.jdbc.Driver
-      url: jdbc:mysql://127.0.0.1:3306/ds_1?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2B8&useTimezone=true
-      username: root
-      password: ilxw
-    ds2:
-      type: com.alibaba.druid.pool.DruidDataSource
-      driverClassName: com.mysql.cj.jdbc.Driver
-      url: jdbc:mysql://127.0.0.1:3306/ds_2?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2B8&useTimezone=true
-      username: root
-      password: ilxw
-    ds3:
-      type: com.alibaba.druid.pool.DruidDataSource
-      driverClassName: com.mysql.cj.jdbc.Driver
-      url: jdbc:mysql://127.0.0.1:3306/ds_3?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2B8&useTimezone=true
-      username: root
-      password: ilxw
-  props:
-    # 日志显示 SQL
-    sql.show: true
-  sharding:
-    tables:
-      # 订单表基础表
-      t_ent_order:
-        # 真实表
-        actualDataNodes: ds$->{0..3}.t_ent_order
-        # 分库策略
-        databaseStrategy:
-          complex:
-            sharding-columns: id,ent_id
-            algorithm-class-name: com.courage.shardingsphere.jdbc.service.sharding.HashSlotAlgorithm
-        # 分表策略
-        tableStrategy:
-          none:
-      # 订单条目表
-      t_ent_order_item:
-        # 真实表
-        actualDataNodes: ds$->{0..3}.t_ent_order_item_$->{0..7}
-        # 分库策略
-        databaseStrategy:
-          complex:
-            sharding-columns: id,ent_id
-            algorithm-class-name: com.courage.shardingsphere.jdbc.service.sharding.HashSlotAlgorithm
-        # 分表策略
-        tableStrategy:
-          complex:
-            sharding-columns: id,ent_id
-            algorithm-class-name: com.courage.shardingsphere.jdbc.service.sharding.HashSlotAlgorithm
-      # 订单详情表
-      t_ent_order_detail:
-        # 真实表
-        actualDataNodes: ds$->{0..3}.t_ent_order_detail
-        # 分库策略
-        databaseStrategy:
-           complex:
-              sharding-columns: id,ent_id
-              algorithm-class-name: com.courage.shardingsphere.jdbc.service.sharding.HashSlotAlgorithm
-        # 分表策略
-        tableStrategy:
-            complex:
-              sharding-columns: id,ent_id
-              algorithm-class-name: com.courage.shardingsphere.jdbc.service.sharding.HashSlotAlgorithm
-    bindingTables:
-      - t_ent_order,t_ent_order_detail
-```
+![](https://www.javayong.cn/pics/sharding/shardingyamlnodes.png)
 
-配置很简单，需要配置如下几点：
+上图中我们看到配置分片规则包含如下两点：
 
-1. 配置数据源，上面配置数据源是： ds0, ds1 , ds2 , ds3 ；
+1.**真实节点**
 
-2. 配置打印日志，也就是：sql.show ，在测试环境建议打开 ，便于调试；
+​	对于我们的应用来讲，我们查询的**逻辑表**是：t_ent_order_item 。
 
-3. 配置哪些表需要分库分表 ，在shardingsphere.datasource.sharding.tables 节点下面配置。
+​	它们在数据库中的真实形态是：`t_ent_order_item_0` 到  `t_ent_order_item_7`。
 
-   ![](https://oscimg.oschina.net/oscnet/up-4212b6ecc449d47123b5168313aad087ac4.png)
+​	真实数据节点是指数据分片的最小单元，由数据源名称和数据表组成。
 
-   标红的是分库算法 ，下面的分表算法也是一样的。 
+​	订单明细表的真实节点是：`ds$->{0..3}.t_ent_order_item_$->{0..7}` 。
 
-   ## 3 复合分片算法
+2.**分库分表算法**
 
-   假设现在需要将订单表平均拆分到4个分库 shard0 ，shard1 ，shard2 ，shard3 。首先将 [0-1023] 平均分为4个区段：[0-255]，[256-511]，[512-767]，[768-1023]，然后对字符串（或子串，由用户自定义）做 hash， hash 结果对1024取模，最终得出的结果<strong style="font-size: 18px;line-height: inherit;color: rgb(255, 104, 39);"> slot </strong>落入哪个区段，便路由到哪个分库。
+分别配置分库策略和分表策略 , 每种策略都需要配置**分片字段**（ sharding-columns ）和**分片算法**。
 
-   ![](https://oscimg.oschina.net/oscnet/up-95a591ba73b27acd967f4d4907722369a37.png)
+# 4 测试接口
 
-   路由算法 ，可以和<strong style="font-size: inherit;line-height: inherit;color: rgb(255, 104, 39);"> 雪花算法 </strong>天然融合在一起， 订单 <strong style="font-size: inherit;line-height: inherit;color: rgb(255, 104, 39);">order_id </strong>使用雪花算法，我们可以将 <strong style="font-size: inherit;line-height: inherit;color: rgb(255, 104, 39);"> slot </strong>的值保存在<strong style="font-size: inherit;line-height: inherit;color: rgb(255, 104, 39);"> 10位工作机器ID </strong>里。
+修改配置文件 application-test.yml ，配置好 MySQL 数据库 和 Redis 服务 。
 
-   ![](https://oscimg.oschina.net/oscnet/up-10106ff9ac00e5520ea047be17cb82077ce.png)
+启动 Main 函数：
 
-   通过订单 <strong style="font-size: inherit;line-height: inherit;color: rgb(255, 104, 39);">order_id </strong> 可以反查出<strong style="font-size: 17px;line-height: inherit;color: rgb(255, 104, 39);"> slot </strong>, 就可以定位该用户的订单数据存储在哪个分区里。
+![](https://www.javayong.cn/pics/sharding/jdbc4main.png?4)
 
-   ```java
-   Integer getWorkerId(Long orderId) {
-    Long workerId = (orderId >> 12) & 0x03ff;
-    return workerId.intValue();
-   }
-   ```
+启动过程中，会打印 shardingsphere jdbc 日志 。
 
-   接下来，我们看下分库分表算法的 JAVA 实现 ，因为我们需要按照主键 ID ，还有用户ID 来查询订单信息，那么我们必须实现复合分片 , 也就是实现 **ComplexKeysShardingAlgorithm** 类。  
+![](https://www.javayong.cn/pics/sharding/startjdbcmain.gif)
 
-   ![](https://oscimg.oschina.net/oscnet/up-831524520a49c17c07710b876f5f489ac64.png)
+启动成功之后，访问 swagger ui 地址：
 
-## 3 ID 生成器
+>  http://localhost:9793/shardingsphere-jdbc-server/doc.html#/home
 
-![](https://oscimg.oschina.net/oscnet/up-a8ebd81abcd817a760b11c26cc3f5ce6ea6.png)
+接下来，我们进行两个测试：新增订单和按照订单 ID 查询
 
-![](https://oscimg.oschina.net/oscnet/up-4d3e1e34ce64f1b0c51add537582c3c108f.png)
+**1、测试存储订单**
 
-1. 查询本地内存，判定是否可以从本地队列中获取 currentTime , seq 两个参数 ，若存在，直接组装；
-2. 若不存在，调用 redis 的 INCRBY 命令 ，这里需要传递一个步长值，便于放一篇数据到本地内存里；
-3. 将数据回写到本地内存 ；
-4. 重新查询本地内存，本地队列中获取 currentTime , seq 两个参数 ，组装最后的结果，返回给生成器 。
+![](https://www.javayong.cn/pics/sharding/jdbc4save.png)
+
+点击发送按钮，接口响应成功。
+
+![](https://www.javayong.cn/pics/sharding/jdbc4console.gif)
+
+我们插入1 条订单记录、1 条订单详情表进入 ds3 分片，并且 2 条订单条目表进入 ds3 分片的 t_ent_order_item_7 表。
+
+**2、测试存储订单**
+
+![](https://www.javayong.cn/pics/sharding/jdbc4queryorder.png)
+
+参数名称是 orderId , 参数值：609335823493160961 ，点击发送按钮，接口响应成功 , 返回订单信息。
+
+![](https://www.javayong.cn/pics/sharding/jdbc4queryconsole.png)
+
