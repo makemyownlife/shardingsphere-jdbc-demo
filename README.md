@@ -1,6 +1,6 @@
 ![](https://javayong.cn/pics/shipinhao/gongzhonghaonew.png)
 
-本项目了实现了 shardingsphere JDBC 4.x 、5.x 分片例子，本文档重点讲解 shardingsphere JDBC 4.x 如何整合 spring。 
+本文档重点讲解 shardingsphere JDBC 4.x 如何整合 spring。 
 
 # 1 业务分析
 
