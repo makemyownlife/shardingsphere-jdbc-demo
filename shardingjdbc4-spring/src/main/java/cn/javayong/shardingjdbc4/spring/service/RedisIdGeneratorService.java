@@ -44,7 +44,7 @@ public class RedisIdGeneratorService {
         }
         // 当前自增的最小 id
         long cursor = counter - ShardingConstants.STEP_LENGTH + 1;
-        while (cursor <= ShardingConstants.MAX_SEQ && cursor < counter) {
+        while (cursor <= Math.min(counter, ShardingConstants.MAX_SEQ)) {
             LocalSequence.SequenceEntity newSequenceEntity = new LocalSequence.SequenceEntity(currentTime, new Long(cursor).intValue());
             LocalSequence.addSeqEntity(newSequenceEntity);
             cursor++;
