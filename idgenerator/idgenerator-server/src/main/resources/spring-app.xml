@@ -45,7 +45,7 @@
     </bean>
 
     <task:scheduled-tasks scheduler="scheduler">
-        <task:scheduled ref="redisIdGeneratorServiceForSpring" method="heartBeat" fixed-rate="5000" />
+        <task:scheduled ref="redisIdGeneratorServiceForSpring" method="heartBeat" fixed-rate="30000" />
     </task:scheduled-tasks>
 
 </beans>
