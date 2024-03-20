@@ -15,7 +15,6 @@ public class IdGeneratorGprcImpl extends IdGeneratorServiceGrpc.IdGeneratorServi
 
     public void getSeqId(cn.javayong.idgenerator.proto.IdRequest request,
                           io.grpc.stub.StreamObserver<cn.javayong.idgenerator.proto.IdResult> responseObserver) {
-        logger.info("test");
         Long seqId = redisIdGeneratorServiceForSpring.createUniqueId(request.getShardingKey());
 
         IdResult idResult = IdResult.newBuilder().setCode(ResponseEntity.SUCCESS).setId(seqId).build();
