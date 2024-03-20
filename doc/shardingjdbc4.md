@@ -85,7 +85,7 @@ shardingsphere:
         databaseStrategy:
           complex:
             sharding-columns: id,ent_id
-            algorithm-class-name: com.courage.shardingsphere.jdbc.service.sharding.HashSlotAlgorithm
+            algorithm-class-name: cn.javayongshardingsphere.jdbc.service.sharding.HashSlotAlgorithm
         # 分表策略
         tableStrategy:
           none:
@@ -97,12 +97,12 @@ shardingsphere:
         databaseStrategy:
           complex:
             sharding-columns: id,ent_id
-            algorithm-class-name: com.courage.shardingsphere.jdbc.service.sharding.HashSlotAlgorithm
+            algorithm-class-name: cn.javayongshardingsphere.jdbc.service.sharding.HashSlotAlgorithm
         # 分表策略
         tableStrategy:
           complex:
             sharding-columns: id,ent_id
-            algorithm-class-name: com.courage.shardingsphere.jdbc.service.sharding.HashSlotAlgorithm
+            algorithm-class-name: cn.javayongshardingsphere.jdbc.service.sharding.HashSlotAlgorithm
       # 订单详情表
       t_ent_order_detail:
         # 真实表
@@ -111,12 +111,12 @@ shardingsphere:
         databaseStrategy:
            complex:
               sharding-columns: id,ent_id
-              algorithm-class-name: com.courage.shardingsphere.jdbc.service.sharding.HashSlotAlgorithm
+              algorithm-class-name: cn.javayongshardingsphere.jdbc.service.sharding.HashSlotAlgorithm
         # 分表策略
         tableStrategy:
             complex:
               sharding-columns: id,ent_id
-              algorithm-class-name: com.courage.shardingsphere.jdbc.service.sharding.HashSlotAlgorithm
+              algorithm-class-name: cn.javayongshardingsphere.jdbc.service.sharding.HashSlotAlgorithm
     bindingTables:
       - t_ent_order,t_ent_order_detail
 ```

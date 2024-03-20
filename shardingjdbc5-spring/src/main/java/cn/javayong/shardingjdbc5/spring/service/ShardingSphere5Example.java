@@ -28,7 +28,7 @@ public class ShardingSphere5Example {
         Properties properties = new Properties();
         properties.put("algorithm-expression", "t_order_${order_id % 2}");
 // properties.put("strategy", "standard");
-// properties.put("algorithmClassName", "com.courage.shardingsphere.jdbc.service.sharding.MyTestStandardAlgorithm");
+// properties.put("algorithmClassName", "cn.javayongshardingsphere.jdbc.service.sharding.MyTestStandardAlgorithm");
 // AlgorithmConfiguration algorithmConfiguration = new AlgorithmConfiguration("CLASS_BASED", properties);
         AlgorithmConfiguration algorithmConfiguration = new AlgorithmConfiguration("INLINE", properties);
         shardingRuleConfig.getShardingAlgorithms().put("order_sharding_algorithms", algorithmConfiguration);

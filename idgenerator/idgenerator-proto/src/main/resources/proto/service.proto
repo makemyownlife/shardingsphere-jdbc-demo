@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+
+option java_package = "cn.javayong.idgenerator.proto";
+
+option java_outer_classname = "idgeneratorservice";
+
+package sharding;
+
+message IdRequest {
+  // 定义请求消息的字段
+  string shardingKey = 1;
+}
+
+message IdResult {
+  int32 code = 1;
+  string message = 2;
+  int64 id = 3;
+}
+
+service IdGeneratorService {
+
+  rpc getSeqId (IdRequest) returns (IdResult);
+
+}

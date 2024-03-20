@@ -5,18 +5,20 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.courage.</groupId>
+    <groupId>cn.javayong</groupId>
     <artifactId>shardingsphere-jdbc-demo</artifactId>
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
 
     <modules>
-        <!-- 基础包  -->
+        <!-- 分片基础包  -->
         <module>shardingjdbc-common</module>
         <!-- shardingsphere jdbc4 integrate spring   -->
         <module>shardingjdbc4-spring</module>
         <!-- shardingsphere jdbc5 integrate spring  -->
         <module>shardingjdbc5-spring</module>
+        <!-- ID 生成器 -->
+        <module>idgenerator</module>
     </modules>
 
     <properties>
