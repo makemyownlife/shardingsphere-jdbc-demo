@@ -1,5 +1,19 @@
 ![](https://javayong.cn/pics/shipinhao/gongzhonghaonew.png)
 
+在笔者心中，**消息队列**，**缓存**，**分库分表**是高并发解决方案三剑客。
+
+分库分表之所以被广泛使用，因为工程相对简单，但分库分表并不仅仅是分片，还是需要考虑如何扩缩容（全量同步、增量同步、数据校验等）。
+
+![分库分表技术思维导图](https://www.javayong.cn/pics/sharding/shardingoverview.png?1)
+
+因此笔者做了一个教学型分库分表示例项目 ，计划将分库分表的技术体系都实际演示一遍。
+
+当前项目包含三个模块 :
+
+- **shardingjdbc4-spring**：使用 shardingsphere-JDBC 4.X 实现分库分表功能
+- **shardingjdbc5-spring**：使用 shardingsphere-JDBC 5.X 实现分库分表功能
+- **idgenerator**: 基于 grpc 实现一个简单的服务端 ID 生成器
+
 本文档重点讲解 shardingsphere JDBC 4.x 如何整合 spring。 
 
 # 1 业务分析
