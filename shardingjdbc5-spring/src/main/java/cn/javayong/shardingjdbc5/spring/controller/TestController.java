@@ -47,5 +47,13 @@ public class TestController {
         return ResponseEntity.successResult(orderId);
     }
 
+    @GetMapping("/batchsave")
+    @ApiOperation("batchsave")
+    public ResponseEntity batchsave() {
+        orderService.batchsave();
+        return ResponseEntity.successResult(null);
+    }
+
+
 
 }
