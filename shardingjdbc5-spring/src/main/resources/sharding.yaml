@@ -56,7 +56,7 @@ rules:
         tableStrategy:
           complex:
             shardingColumns: id,ent_id
-            shardingAlgorithmName: hash-slot-algorithm
+            shardingAlgorithmName: hash-slot-table-algorithm
     # 绑定表
     bindingTables:
       - t_ent_order,t_ent_order_detail
@@ -68,6 +68,13 @@ rules:
         props:
           strategy: complex
           algorithmClassName: cn.javayong.shardingjdbc5.spring.common.sharding.HashSlotAlgorithm
+      hash-slot-table-algorithm:
+        type: CLASS_BASED
+        props:
+          strategy: complex
+          algorithmClassName: cn.javayong.shardingjdbc5.spring.common.sharding.HashSlotAlgorithm
+          # 非默认值，直接对分片数取余
+          directIndex: true
 
   # 广播
   - !BROADCAST

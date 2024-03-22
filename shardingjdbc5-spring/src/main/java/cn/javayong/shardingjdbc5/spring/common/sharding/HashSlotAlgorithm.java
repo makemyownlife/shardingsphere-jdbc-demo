@@ -20,9 +20,15 @@ public class HashSlotAlgorithm implements ComplexKeysShardingAlgorithm {
 
     public final static Logger logger = LoggerFactory.getLogger(HashSlotAlgorithm.class);
 
+    // 是否直接通过 slot/shardingCount
+    private final static String DIRECT_INDEX_PROPERTY = "directIndex";
+
+    private Properties properties;
+
     @Override
     public void init(Properties properties) {
         logger.info("begin to init HashSlotAlgorithm ");
+        this.properties = properties;
     }
 
     @Override
@@ -59,7 +65,12 @@ public class HashSlotAlgorithm implements ComplexKeysShardingAlgorithm {
         //返回结果
         List result = new ArrayList<>();
         for (Integer slot : slotList) {
-            int index = StringHashUtil.index(slot, count);
+            Integer index = null;
+            if (StringUtils.equals("true", properties.getProperty(DIRECT_INDEX_PROPERTY))) {
+                index = StringHashUtil.indexDirect(slot, count);
+            } else {
+                index = StringHashUtil.index(slot, count);
+            }
             result.add(availableTargetNames.toArray()[index]);
         }
         return result;

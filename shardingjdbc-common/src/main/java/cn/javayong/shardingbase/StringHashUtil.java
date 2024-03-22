@@ -84,4 +84,9 @@ public class StringHashUtil {
         return index;
     }
 
+    public static int indexDirect(int slot, int shardingCount) {
+        int index = slot % shardingCount;
+        return index;
+    }
+
 }
