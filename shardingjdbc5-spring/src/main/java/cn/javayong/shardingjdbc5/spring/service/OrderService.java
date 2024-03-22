@@ -30,7 +30,7 @@ public class OrderService {
 
     @Transactional
     public Long save() {
-        Long entId = 5L;
+        Long entId = 1215L;
         String regionCode = "BJ";
 
         //保存订单基本信息
