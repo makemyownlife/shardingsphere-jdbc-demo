@@ -25,7 +25,9 @@
     <packaging>pom</packaging>
 
     <modules>
+        <!-- proto 描述 以及自动生成 JAVA 类 -->
         <module>idgenerator-proto</module>
+        <!-- GRPC 服务端 -->
         <module>idgenerator-server</module>
     </modules>
 
