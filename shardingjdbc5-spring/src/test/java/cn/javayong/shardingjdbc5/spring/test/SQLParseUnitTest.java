@@ -16,14 +16,15 @@ public class SQLParseUnitTest {
     public void testInsert() {
         boolean useCache = true;
         String sql = "insert into t_order (order_id,user_id,price) values (?,?,?)";
-        // 获取语法树
+
+        // 语法树 AST
         CacheOption cacheOption = new CacheOption(128, 1024L);
         SQLParserEngine parserEngine = new SQLParserEngine("MySQL", cacheOption);
         ParseASTNode parseASTNode = parserEngine.parse(sql, useCache);
 
+        // 通过 visit 模式
         SQLStatementVisitorEngine sqlVisitorEngine = new SQLStatementVisitorEngine("MySQL", true);
         SQLStatement sqlStatement = sqlVisitorEngine.visit(parseASTNode);
-
         System.out.println(sqlStatement);
     }
 
