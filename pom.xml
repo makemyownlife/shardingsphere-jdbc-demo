@@ -19,6 +19,8 @@
         <module>shardingjdbc5-spring</module>
         <!-- ID 生成器 -->
         <module>idgenerator</module>
+        <!-- 语法分析器生成工具 antlr 使用例子  -->
+        <module>antlr-helloworld</module>
     </modules>
 
     <properties>
