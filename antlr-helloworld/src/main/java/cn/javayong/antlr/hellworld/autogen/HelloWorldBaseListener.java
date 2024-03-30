@@ -1,6 +1,6 @@
 // Generated from HelloWorld.g4 by ANTLR 4.8
 
- package cn.javayong.antlr.hellworld;
+ package cn.javayong.antlr.hellworld.autogen;
  
 
 import org.antlr.v4.runtime.ParserRuleContext;
