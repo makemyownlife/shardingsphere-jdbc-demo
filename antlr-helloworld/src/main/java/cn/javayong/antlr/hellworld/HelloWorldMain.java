@@ -23,8 +23,12 @@ public class HelloWorldMain {
         System.out.print("请输入参数值：");
         String input = scanner.nextLine();
 
+        // 词法分析器
         HelloWorldLexer lexer = new HelloWorldLexer(new ANTLRInputStream(input));
+        // 解析成 tokens
         CommonTokenStream tokens = new CommonTokenStream(lexer);
+
+        // 语法分析器
         HelloWorldParser parser = new HelloWorldParser(tokens);
         ParseTree tree = parser.r();
         ParseTreeWalker walker = new ParseTreeWalker();
