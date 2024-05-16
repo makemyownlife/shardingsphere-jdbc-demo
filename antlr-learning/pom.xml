@@ -16,6 +16,8 @@
     <modules>
         <!-- helloworld -->
         <module>antlr-helloworld</module>
+        <!-- shardingsphere g4文件演示一次 -->
+        <module>antlr-shardingsphere</module>
     </modules>
 
     <properties>
