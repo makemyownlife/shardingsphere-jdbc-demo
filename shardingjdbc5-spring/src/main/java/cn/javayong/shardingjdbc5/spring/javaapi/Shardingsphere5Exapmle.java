@@ -45,7 +45,7 @@ public class Shardingsphere5Exapmle {
         // 添加 算法： t_order_inlne
         shardingRuleConfiguration.getShardingAlgorithms().put("t_order_inlne", new AlgorithmConfiguration("INLINE", algorithmrProps));
         //  添加 ID 生成器 : snowFlake
-        shardingRuleConfiguration.getKeyGenerators().put("snowflake", new AlgorithmConfiguration("SNOWFLAKE", new Properties()));
+       // shardingRuleConfiguration.getKeyGenerators().put("snowflake", new AlgorithmConfiguration("SNOWFLAKE", new Properties()));
         // 将逻辑表 t_order 分片规则到分片规则里
         shardingRuleConfiguration.getTables().add(orderTableRuleConfig);
 
