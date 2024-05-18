@@ -1,17 +1,5 @@
 /*
- Navicat Premium Data Transfer
-
- Source Server         : courage_localhost
- Source Server Type    : MySQL
- Source Server Version : 50739
- Source Host           : localhost:3306
- Source Schema         : sj_ds0
-
- Target Server Type    : MySQL
- Target Server Version : 50739
- File Encoding         : 65001
-
- Date: 18/05/2024 14:44:41
+  原生api 演示 SQL 执行前创建数据库 ：sj_ds0
 */
 
 SET NAMES utf8mb4;
