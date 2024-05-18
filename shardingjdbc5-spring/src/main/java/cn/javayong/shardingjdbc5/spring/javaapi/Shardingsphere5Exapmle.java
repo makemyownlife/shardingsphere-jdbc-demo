@@ -35,7 +35,6 @@ public class Shardingsphere5Exapmle {
         // 表名： t_order 的配置规则
         ShardingTableRuleConfiguration orderTableRuleConfig = new ShardingTableRuleConfiguration("t_order", "ds0.t_order_$->{0..1}");
         orderTableRuleConfig.setTableShardingStrategy(new StandardShardingStrategyConfiguration("order_id", "t_order_inlne"));
-        orderTableRuleConfig.setKeyGenerateStrategy(new KeyGenerateStrategyConfiguration("order_id", "snowflake"));
 
         // 3. 分片配置类
         ShardingRuleConfiguration shardingRuleConfiguration = new ShardingRuleConfiguration();
@@ -44,8 +43,6 @@ public class Shardingsphere5Exapmle {
         algorithmrProps.put("algorithm-expression", "t_order_$->{order_id % 2}");
         // 添加 算法： t_order_inlne
         shardingRuleConfiguration.getShardingAlgorithms().put("t_order_inlne", new AlgorithmConfiguration("INLINE", algorithmrProps));
-        //  添加 ID 生成器 : snowFlake
-       // shardingRuleConfiguration.getKeyGenerators().put("snowflake", new AlgorithmConfiguration("SNOWFLAKE", new Properties()));
         // 将逻辑表 t_order 分片规则到分片规则里
         shardingRuleConfiguration.getTables().add(orderTableRuleConfig);
 
@@ -67,7 +64,6 @@ public class Shardingsphere5Exapmle {
                 dataSourceMap,   // 数据源 Map
                 ruleConfigs,     // 规则配置
                 props);          // 属性
-
 
         // 6. 测试向t_order表插入8条数据，8条数据会分散到2个表
         Connection connection = dataSource.getConnection();
