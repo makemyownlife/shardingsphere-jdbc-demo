@@ -10,7 +10,6 @@ import org.apache.shardingsphere.mode.repository.standalone.StandalonePersistRep
 import org.apache.shardingsphere.sharding.api.config.ShardingRuleConfiguration;
 import org.apache.shardingsphere.sharding.api.config.rule.ShardingTableRuleConfiguration;
 import org.apache.shardingsphere.sharding.api.config.strategy.keygen.KeyGenerateStrategyConfiguration;
-import org.apache.shardingsphere.sharding.api.config.strategy.sharding.ShardingStrategyConfiguration;
 import org.apache.shardingsphere.sharding.api.config.strategy.sharding.StandardShardingStrategyConfiguration;
 
 import javax.sql.DataSource;
@@ -24,7 +23,6 @@ import java.util.*;
 public class Shardingsphere5Exapmle {
 
     public static void main(String[] args) throws Exception {
-
         // 0. 模式配置
         ModeConfiguration modeConfig = createModeConfiguration();
 
@@ -109,5 +107,9 @@ public class Shardingsphere5Exapmle {
     private static ModeConfiguration createModeConfiguration() {
         return new ModeConfiguration("Standalone", new StandalonePersistRepositoryConfiguration("JDBC", new Properties()));
     }
+
+//    private static ModeConfiguration createModeConfigurationCluster() {
+//        return new ModeConfiguration("Cluster", new ClusterPersistRepositoryConfiguration("ZooKeeper", "governance-sharding-db", "localhost:2181", new Properties()));
+//    }
 
 }
