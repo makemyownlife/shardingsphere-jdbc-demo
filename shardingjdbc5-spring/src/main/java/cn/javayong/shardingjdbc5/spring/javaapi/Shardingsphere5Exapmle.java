@@ -80,12 +80,6 @@ public class Shardingsphere5Exapmle {
         connection.close();
     }
 
-    private ShardingTableRuleConfiguration getOrderTableRuleConfiguration() {
-        ShardingTableRuleConfiguration orderTableRuleConfig = new ShardingTableRuleConfiguration("t_order", "ds0.t_order_$->{0..1}");
-        orderTableRuleConfig.setKeyGenerateStrategy(new KeyGenerateStrategyConfiguration("order_id", "snowflake"));
-        return orderTableRuleConfig;
-    }
-
     private static Map<String, DataSource> createDataSourceMap() {
         Map<String, DataSource> dataSourceMap = new HashMap<>();
         // 配置第一个数据源
