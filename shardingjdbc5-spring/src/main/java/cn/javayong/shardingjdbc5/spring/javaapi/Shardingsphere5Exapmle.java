@@ -60,9 +60,9 @@ public class Shardingsphere5Exapmle {
         DataSource dataSource = ShardingSphereDataSourceFactory.createDataSource(
                 dataSourceName,  // 数据源名称
                 modeConfig,      // 模式
-                dataSourceMap,
-                ruleConfigs,
-                props);
+                dataSourceMap,   // 数据源 Map
+                ruleConfigs,     // 规则配置
+                props);          // 属性
 
 
         // 6. 测试向t_order表插入8条数据，8条数据会分散到2个表
