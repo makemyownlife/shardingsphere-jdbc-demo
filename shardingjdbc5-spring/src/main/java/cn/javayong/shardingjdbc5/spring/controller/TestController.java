@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Map;
 
 @Api(tags = "测试接口")
@@ -54,6 +55,11 @@ public class TestController {
         return ResponseEntity.successResult(null);
     }
 
-
+    @GetMapping("/queryOrderListDemo")
+    @ApiOperation("queryOrderListDemo")
+    public ResponseEntity queryOrderListDemo() {
+        List list = orderService.queryOrderListDemo();
+        return ResponseEntity.successResult(list);
+    }
 
 }

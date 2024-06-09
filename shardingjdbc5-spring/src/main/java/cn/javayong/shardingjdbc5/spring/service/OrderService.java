@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -132,6 +133,10 @@ public class OrderService {
                 orderMapper.saveOrderItem(item2);
             }
         }
+    }
+
+    public List queryOrderListDemo() {
+        return orderMapper.queryOrderListDemo();
     }
 
 }

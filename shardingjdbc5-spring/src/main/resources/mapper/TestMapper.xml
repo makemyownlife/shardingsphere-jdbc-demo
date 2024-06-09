@@ -105,4 +105,23 @@
                     a.id = b.order_id
     </select>
 
+    <select id="queryOrderListDemo"  resultType="java.util.HashMap">
+        select
+        a.id ,
+        a.ent_id,
+        a.region_code,
+        a.amount,
+        a.mobile,
+        a.create_time,
+        a.update_time,
+        b.address
+        FROM
+        t_ent_order a , t_ent_order_detail b
+        where
+        a.id  in (612970570534932485 ,612972956519784455 , 612972955527139336)
+        and
+        a.id = b.order_id
+    </select>
+
+
 </mapper>

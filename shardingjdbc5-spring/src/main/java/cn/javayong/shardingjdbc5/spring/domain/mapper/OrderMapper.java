@@ -5,6 +5,7 @@ import cn.javayong.shardingjdbc5.spring.domain.po.TEntOrderDetail;
 import cn.javayong.shardingjdbc5.spring.domain.po.TEntOrderItem;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Map;
 
 @Repository
@@ -22,5 +23,7 @@ public interface OrderMapper {
     void saveOrderItem(TEntOrderItem entOrderItem);
 
     Map<String,Object> queryOrder(Long orderId);
+
+    List<Map<String,Object>> queryOrderListDemo();
 
 }
