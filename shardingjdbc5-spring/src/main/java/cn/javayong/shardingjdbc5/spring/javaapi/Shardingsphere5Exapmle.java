@@ -76,6 +76,11 @@ public class Shardingsphere5Exapmle {
             System.out.println(ps.executeUpdate());
         }
         connection.commit();
+
+        // 测试查询
+        ps = connection.prepareStatement("select * from t_order t where  t.order_id in (1,2,3,4,5,19,18,17,14)");
+        ps.executeQuery();
+
         ps.close();
         connection.close();
     }
