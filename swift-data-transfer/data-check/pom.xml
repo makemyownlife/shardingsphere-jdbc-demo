@@ -3,27 +3,19 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
     <parent>
         <groupId>cn.javayong</groupId>
-        <artifactId>shardingsphere-jdbc-demo</artifactId>
+        <artifactId>swift-data-transfer</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>swift-data-transfer</artifactId>
-    <packaging>pom</packaging>
+    <artifactId>data-check</artifactId>
+    <packaging>jar</packaging>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-
-    <modules>
-        <!-- 数据检测  -->
-        <module>data-check</module>
-        <!-- 数据同步 -->
-        <module>data-sync</module>
-    </modules>
 
 </project>
