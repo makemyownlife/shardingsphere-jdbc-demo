@@ -21,6 +21,8 @@
         <module>idgenerator</module>
         <!-- 语法分析器生成工具 antlr 使用例子  -->
         <module>antlr-learning</module>
+        <!-- 平滑迁移 -->
+        <module>swift-data-transfer</module>
     </modules>
 
     <properties>
