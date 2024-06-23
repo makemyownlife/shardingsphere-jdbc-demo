@@ -23,8 +23,6 @@
         <module>antlr-learning</module>
         <!-- 平滑迁移 -->
         <module>swift-data-transfer</module>
-        <module>swift-data-transfer/data-check</module>
-        <module>swift-data-transfer/data-sync</module>
     </modules>
 
     <properties>

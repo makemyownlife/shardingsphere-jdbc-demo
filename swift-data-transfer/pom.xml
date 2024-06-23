@@ -24,6 +24,8 @@
         <module>data-check</module>
         <!-- 数据同步 -->
         <module>data-sync</module>
+        <!-- shardingproxy 算法 模块 -->
+        <module>proxy-algorithms</module>
     </modules>
 
 </project>
