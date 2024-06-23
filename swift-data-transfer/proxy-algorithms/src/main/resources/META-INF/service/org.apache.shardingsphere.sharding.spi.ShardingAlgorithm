@@ -1,1 +1,0 @@
-org.apache.shardingsphere.sharding.spi.ShardingAlgorithm=cn.javayong.proxy.algorithms.HashSlotAlgorithm
