@@ -57,7 +57,7 @@ public class StringHashUtil {
             String firstItem = first.get(i);
             for (int j = 0; j < second.size(); j++) {
                 String secondItem = second.get(j);
-                if (StringUtils.isNotBlank(firstItem) && StringUtils.isNotBlank(secondItem)) {
+                if (firstItem != null && !"".equals(secondItem)) {
                     arr.add(firstItem + secondItem);
                 }
             }
