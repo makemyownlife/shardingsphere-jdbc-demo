@@ -22,7 +22,7 @@
     <modules>
         <!-- 数据检测  -->
         <module>data-check</module>
-        <!-- 数据同步 -->
+        <!-- 数据同步 （全量、增量） -->
         <module>data-sync</module>
         <!-- shardingproxy 算法 模块 -->
         <module>proxy-algorithms</module>
