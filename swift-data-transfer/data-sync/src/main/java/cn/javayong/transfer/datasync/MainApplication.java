@@ -1,5 +1,7 @@
 package cn.javayong.transfer.datasync;
 
+import cn.javayong.transfer.datasync.config.DataSyncConfig;
+import cn.javayong.transfer.datasync.support.YamlLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,6 +16,10 @@ public class MainApplication {
     public static void main(String[] args) {
         logger.info("开始启动同步服务");
         long start = System.currentTimeMillis();
+
+        // 加载配置
+        DataSyncConfig dataSyncConfig = YamlLoader.loadConfig();
+
         // 配置全量
 
         // 配置增量
