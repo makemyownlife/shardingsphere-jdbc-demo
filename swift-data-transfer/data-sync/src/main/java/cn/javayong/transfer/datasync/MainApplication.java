@@ -14,6 +14,9 @@ public class MainApplication {
     public static void main(String[] args) {
         logger.info("开始启动同步服务");
         long start = System.currentTimeMillis();
+        // 配置全量
+
+        // 配置增量
 
         logger.info("结束启动同步服务 耗时：" + (System.currentTimeMillis() - start) + "毫秒");
     }
