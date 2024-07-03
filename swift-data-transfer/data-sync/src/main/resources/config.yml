@@ -8,4 +8,6 @@ fullStrategy:
       username: root
       password: root
     tableConfig:
-      tables: t_ent_order,t_ent_order_detail,t_ent_order_item
+      tables: t_ent_order,t_ent_order_detail,t_ent_order_item # 全量同步表
+      switchOpen: true                                        # 是否打开开关
+
