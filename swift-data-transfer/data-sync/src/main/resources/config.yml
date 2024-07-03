@@ -1,5 +1,4 @@
-full:
-  database:
+fullStrategy:
     source:
       url: jdbc:mysql://127.0.0.1:3306/ds_1?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2B8&useTimezone=true
       username : root
@@ -8,8 +7,5 @@ full:
       url: jdbc:mysql://127.0.0.1:3306/ds_1?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2B8&useTimezone=true
       username: root
       password: root
-  strategy:
-    tables:
-      - t_ent_order
-      - t_ent_order_detail
-      - t_ent_order_item
+    tableConfig:
+      tables: t_ent_order,t_ent_order_detail,t_ent_order_item
