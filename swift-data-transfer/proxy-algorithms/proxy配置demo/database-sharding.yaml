@@ -1,0 +1,85 @@
+databaseName: myorder
+
+dataSources:
+  ds0:
+    url: jdbc:mysql://127.0.0.1:3306/ds_0?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2B8&useTimezone=true
+    username: root
+    password: ilxw
+    connectionTimeoutMilliseconds: 30000
+    idleTimeoutMilliseconds: 60000
+    maxLifetimeMilliseconds: 1800000
+    maxPoolSize: 50
+    minPoolSize: 1
+  ds1:
+    url: jdbc:mysql://127.0.0.1:3306/ds_1?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2B8&useTimezone=true
+    username: root
+    password: ilxw
+    connectionTimeoutMilliseconds: 30000
+    idleTimeoutMilliseconds: 60000
+    maxLifetimeMilliseconds: 1800000
+    maxPoolSize: 50
+    minPoolSize: 1
+  ds2:
+    url: jdbc:mysql://127.0.0.1:3306/ds_2?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2B8&useTimezone=true
+    username: root
+    password: ilxw
+    connectionTimeoutMilliseconds: 30000
+    idleTimeoutMilliseconds: 60000
+    maxLifetimeMilliseconds: 1800000
+    maxPoolSize: 50
+    minPoolSize: 1
+  ds3:
+    url: jdbc:mysql://127.0.0.1:3306/ds_3?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2B8&useTimezone=true
+    username: root
+    password: ilxw
+    connectionTimeoutMilliseconds: 30000
+    idleTimeoutMilliseconds: 60000
+    maxLifetimeMilliseconds: 1800000
+    maxPoolSize: 50
+    minPoolSize: 1
+
+rules:
+  - !SHARDING
+    tables:
+      t_ent_order:
+        actualDataNodes: ds$->{0..3}.t_ent_order
+        databaseStrategy:
+          complex:
+            shardingColumns: id,ent_id
+            shardingAlgorithmName: hash-slot-algorithm
+      t_ent_order_detail:
+        actualDataNodes: ds$->{0..3}.t_ent_order_detail
+        databaseStrategy:
+          complex:
+            shardingColumns: id,ent_id
+            shardingAlgorithmName: hash-slot-algorithm
+      t_ent_order_item:
+        actualDataNodes: ds$->{0..3}.t_ent_order_item_$->{0..7}
+        databaseStrategy:
+          complex:
+            shardingColumns: id,ent_id
+            shardingAlgorithmName: hash-slot-algorithm
+        tableStrategy:
+          complex:
+            shardingColumns: id,ent_id
+            shardingAlgorithmName: hash-slot-table-algorithm
+    bindingTables:
+      - t_ent_order,t_ent_order_detail
+
+    shardingAlgorithms:
+      hash-slot-algorithm:
+        type: CLASS_BASED
+        props:
+          strategy: complex
+          algorithmClassName: cn.javayong.proxy.algorithms.HashSlotAlgorithm
+      hash-slot-table-algorithm:
+        type: CLASS_BASED
+        props:
+          strategy: complex
+          algorithmClassName: cn.javayong.proxy.algorithms.HashSlotAlgorithm
+          # 非默认值，直接对分片数取余
+          directIndex: true
+
+  - !BROADCAST
+    tables:
+      - t_address
