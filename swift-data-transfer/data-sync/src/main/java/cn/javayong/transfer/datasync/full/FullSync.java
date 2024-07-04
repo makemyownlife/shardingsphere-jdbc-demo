@@ -17,6 +17,12 @@ public class FullSync {
         this.dataSyncConfig = dataSyncConfig;
     }
 
+    public void start() {
+        
+    }
 
+    public void stop() {
+
+    }
 
 }
