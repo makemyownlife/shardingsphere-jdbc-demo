@@ -1,8 +1,8 @@
 package cn.javayong.transfer.datasync;
 
 import cn.javayong.transfer.datasync.config.DataSyncConfig;
+import cn.javayong.transfer.datasync.full.FullSync;
 import cn.javayong.transfer.datasync.support.YamlLoader;
-import com.alibaba.fastjson.JSON;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,7 +20,12 @@ public class MainApplication {
 
         // 加载配置
         DataSyncConfig dataSyncConfig = YamlLoader.loadConfig();
-        logger.info("dataSyncConfig:" + JSON.toJSONString(dataSyncConfig));
+
+        // 启动全量同步
+        FullSync fullSync = new FullSync(dataSyncConfig);
+        fullSync.start();
+
+        // 启动增量同步
 
 
 
