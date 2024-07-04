@@ -23,8 +23,10 @@ public class FullSync {
     public void start() {
         HashMap<String, HashMap<String, String>> fullStrategy = dataSyncConfig.getFullStrategy();
         if (!fullStrategy.isEmpty()) {
-            Map<String, String> source = dataSyncConfig.getFullStrategy().get("source");
-            Map<String, String> tableConfig = dataSyncConfig.getFullStrategy().get("tableConfig");
+            Map<String, String> tableConfig = dataSyncConfig.getFullStrategy().get("tableConfig"); // 同步表配置
+            Map<String, String> source = dataSyncConfig.getFullStrategy().get("source");           // 源数据源
+            Map<String, String> target = dataSyncConfig.getFullStrategy().get("target");           // 目标数据源
+            
         }
     }
 
