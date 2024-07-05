@@ -1,1 +1,0 @@
-package cn.javayong.transfer.datasync.full;
