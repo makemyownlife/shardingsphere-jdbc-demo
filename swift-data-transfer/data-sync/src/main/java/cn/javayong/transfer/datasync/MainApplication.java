@@ -23,10 +23,9 @@ public class MainApplication {
 
         // 启动全量同步
         FullSyncService fullSyncService = new FullSyncService(dataSyncConfig);
-        fullSyncService.start();
+        fullSyncService.init();
 
         // 启动增量同步
-
 
 
         logger.info("结束启动同步服务 耗时：" + (System.currentTimeMillis() - start) + "毫秒");

@@ -16,11 +16,13 @@ public class FullSyncService {
 
     private DataSyncConfig dataSyncConfig;
 
+    private FullSyncTask fullSyncTask;
+
     public FullSyncService(DataSyncConfig dataSyncConfig) {
         this.dataSyncConfig = dataSyncConfig;
     }
 
-    public void start() {
+    public void init() {
         HashMap<String, HashMap<String, Object>> fullStrategy = dataSyncConfig.getFullStrategy();
         if (!fullStrategy.isEmpty()) {
             Map<String, Object> tableConfig = dataSyncConfig.getFullStrategy().get("tableConfig"); // 同步表配置
@@ -28,13 +30,16 @@ public class FullSyncService {
             Boolean switchOpen = (Boolean) tableConfig.get("switchOpen");
             if (switchOpen) {
                 // 启动调度任务执行 全量同步逻辑
-
+                this.fullSyncTask = new FullSyncTask(fullStrategy);
+                this.fullSyncTask.start();
             }
         }
     }
 
-    public void stop() {
-
+    public void destroy() {
+        if (this.fullSyncTask != null) {
+            this.fullSyncTask.stop();
+        }
     }
 
 }
