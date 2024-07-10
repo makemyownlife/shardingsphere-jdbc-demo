@@ -83,7 +83,7 @@ public class FullSyncTask {
         DruidDataSource dataSource = new DruidDataSource();
         dataSource.setUrl(String.valueOf(map.get("url")));
         dataSource.setUsername(String.valueOf(map.get("username")));
-        dataSource.setUsername(String.valueOf(map.get("password")));
+        dataSource.setPassword(String.valueOf(map.get("password")));
         dataSource.setMinIdle(1);
         dataSource.setMaxActive(30);
         try {
