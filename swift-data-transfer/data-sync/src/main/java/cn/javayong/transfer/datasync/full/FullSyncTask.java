@@ -5,6 +5,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
@@ -51,9 +54,15 @@ public class FullSyncTask {
 
     private void process() {
         while (true) {
-            logger.info("processing");
             try {
-                Thread.sleep(2000);
+                // 读取当前最小 id
+                Connection sourceConnection = sourceDataSource.getConnection();
+                DatabaseMetaData SourceMetaData = sourceConnection.getMetaData();
+
+                String tableName = "your_table";
+                ResultSet columnsResultRs = SourceMetaData.getColumns(null, null, tableName, null);
+                
+
             } catch (Exception e) {
             }
         }
