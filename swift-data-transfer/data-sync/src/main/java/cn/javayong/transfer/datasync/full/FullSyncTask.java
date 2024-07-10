@@ -54,7 +54,6 @@ public class FullSyncTask {
             Connection sourceConnection = sourceDataSource.getConnection();
             DatabaseMetaData SourceMetaData = sourceConnection.getMetaData();
 
-
             String tableName = "t_ent_order";
             ResultSet columns = SourceMetaData.getColumns(
                     null,
