@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 
 import java.sql.*;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -54,6 +55,9 @@ public class FullSyncTask {
             Connection sourceConnection = sourceDataSource.getConnection();
             DatabaseMetaData SourceMetaData = sourceConnection.getMetaData();
 
+            Map<String, String> columnsMap = new LinkedHashMap<>();
+            Map<String, Integer> columnTypeMap = new LinkedHashMap<>();
+
             String tableName = "t_ent_order";
             ResultSet columns = SourceMetaData.getColumns(
                     null,
@@ -61,7 +65,7 @@ public class FullSyncTask {
                     tableName,
                     null
             );
-
+            
             // 4. 遍历结果集并输出列信息
             while (columns.next()) {
                 String columnName = columns.getString("COLUMN_NAME");
