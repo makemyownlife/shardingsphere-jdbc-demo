@@ -68,8 +68,6 @@ public class FullSyncTask {
             // 构造游标 SQL
             String querySQL = "select * from " + tableName + " order by id";
 
-            ResultSet queryResultSet = null;
-
         } catch (Exception e) {
             logger.error(" process tableName:" + tableName + " occur error:", e);
         }
