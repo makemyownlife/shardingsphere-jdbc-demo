@@ -61,15 +61,19 @@ public class FullSyncTask {
     }
 
     private void process(String tableName) {
+        long start = System.currentTimeMillis();
         logger.info("开始全量同步表：" + tableName);
         try {
             LinkedHashMap<String, Integer> columnTypes = Utils.getColumnTypes(sourceDataSource, tableName);
+            // 构造游标 SQL
+            String querySQL = "select * from " + tableName + " order by id";
 
+            ResultSet queryResultSet = null;
 
         } catch (Exception e) {
             logger.error(" process tableName:" + tableName + " occur error:", e);
         }
-        logger.info("结束全量同步表：" + tableName);
+        logger.info("结束全量同步表：" + tableName + " 耗时:" + (System.currentTimeMillis() - start));
     }
 
     private DruidDataSource initDataSource(HashMap<String, Object> map) {
