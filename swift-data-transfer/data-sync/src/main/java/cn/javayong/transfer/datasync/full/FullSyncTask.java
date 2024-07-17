@@ -67,6 +67,13 @@ public class FullSyncTask {
             LinkedHashMap<String, Integer> columnTypes = Utils.getColumnTypes(sourceDataSource, tableName);
             // 构造游标 SQL
             String querySQL = "select * from " + tableName + " order by id";
+            Connection sourceConnection = sourceDataSource.getConnection();
+            // 执行查询查询语句
+            PreparedStatement preparedStatement = sourceConnection.prepareStatement(
+                    querySQL,
+                    ResultSet.TYPE_FORWARD_ONLY, // 设置游标类型，这里是只进游标
+                    ResultSet.CONCUR_READ_ONLY); // 设置并发模式，这里是只读
+            
 
         } catch (Exception e) {
             logger.error(" process tableName:" + tableName + " occur error:", e);
