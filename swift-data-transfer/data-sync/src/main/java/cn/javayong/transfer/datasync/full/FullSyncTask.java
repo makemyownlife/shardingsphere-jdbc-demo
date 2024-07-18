@@ -73,10 +73,16 @@ public class FullSyncTask {
                     querySQL,
                     ResultSet.TYPE_FORWARD_ONLY, // 设置游标类型，这里是只进游标
                     ResultSet.CONCUR_READ_ONLY); // 设置并发模式，这里是只读
-            preparedStatement.setFetchSize(5);
+            preparedStatement.setFetchSize(10);
             // 获取结果
             ResultSet resultSet = preparedStatement.executeQuery();
-
+            while (resultSet.next()) {
+                String mobile = resultSet.getString("mobile");
+                System.out.println(mobile);
+            }
+            resultSet.close();
+            preparedStatement.close();
+            sourceConnection.close();
         } catch (Exception e) {
             logger.error(" process tableName:" + tableName + " occur error:", e);
         }
