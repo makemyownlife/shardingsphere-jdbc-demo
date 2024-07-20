@@ -78,7 +78,6 @@ public class FullSyncTask {
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 String mobile = resultSet.getString("mobile");
-                System.out.println(mobile);
                 // 将数据转换成 RowData 对象 ，然后将数据存储到目标数据源
 
             }
