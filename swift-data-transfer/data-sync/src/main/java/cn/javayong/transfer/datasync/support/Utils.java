@@ -62,7 +62,6 @@ public class Utils {
 
                 // 将 SQL 类型代码转换为类型名称
                 String typeName = getTypeName(dataType);
-                log.warn("表名：" + tableName + " Column Name: " + columnName + ", Type: " + columnType + ", SQL Type: " + typeName);
                 columnTypes.put(columnName, dataType);
             }
         } catch (Exception e) {

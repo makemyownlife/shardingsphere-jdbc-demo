@@ -7,7 +7,7 @@ fullStrategy:
       username : root
       password : ilxw
     target:                                                   # 目的数据库
-      url: jdbc:mysql://127.0.0.1:3306/ds_1?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2B8&useTimezone=true
+      url: jdbc:mysql://127.0.0.1:3307/myorder?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2B8&useTimezone=true
       username: root
       password: root
 

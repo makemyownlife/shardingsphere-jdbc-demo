@@ -10,7 +10,9 @@ import org.slf4j.LoggerFactory;
 import java.sql.*;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 全量同步任务
@@ -46,9 +48,7 @@ public class FullSyncTask {
             @Override
             public void run() {
                 try {
-                    String[] tableNames = StringUtils.split(
-                            (String) tableConfig.get("tables"),
-                            ",");
+                    String[] tableNames = StringUtils.split((String) tableConfig.get("tables"), ",");
                     for (String tableName : tableNames) {
                         process(tableName);
                     }
@@ -70,9 +70,7 @@ public class FullSyncTask {
             String querySQL = "select * from " + tableName + " order by id";
             Connection sourceConnection = sourceDataSource.getConnection();
             // 执行查询查询语句
-            PreparedStatement preparedStatement = sourceConnection.prepareStatement(
-                    querySQL,
-                    ResultSet.TYPE_FORWARD_ONLY, // 设置游标类型，这里是只进游标
+            PreparedStatement preparedStatement = sourceConnection.prepareStatement(querySQL, ResultSet.TYPE_FORWARD_ONLY, // 设置游标类型，这里是只进游标
                     ResultSet.CONCUR_READ_ONLY); // 设置并发模式，这里是只读
             preparedStatement.setFetchSize(10);  // 游标 每次获取 10 条数据
             // 获取结果
@@ -88,10 +86,7 @@ public class FullSyncTask {
                 StringBuilder insertSql = new StringBuilder();
                 insertSql.append("INSERT INTO ").append(tableName).append(" (");
 
-                columnTypes.forEach((targetColumnName, srcColumnName) -> insertSql.append("`")
-                        .append(targetColumnName)
-                        .append("`")
-                        .append(","));
+                columnTypes.forEach((targetColumnName, srcColumnName) -> insertSql.append("`").append(targetColumnName).append("`").append(","));
 
                 int len = insertSql.length();
                 insertSql.delete(len - 1, len).append(") VALUES (");
@@ -102,6 +97,21 @@ public class FullSyncTask {
                 len = insertSql.length();
                 insertSql.delete(len - 1, len).append(")");
 
+                // step 2.1  然后将数据插入到目标数据库 , 获取目标数据源连接
+                Connection targetConnection = targetDataSource.getConnection();
+                PreparedStatement targetPreparedStatement = targetConnection.prepareStatement(insertSql.toString());
+                // step 2.2  设置 targetPreparedStatement 的每个字段值
+                List<Map.Entry<String, Object>> rowDataForList = rowData.entrySet().stream().collect(Collectors.toList());
+                for (int i = 0; i < rowDataForList.size(); i++) {
+                    Map.Entry<String, Object> columnObject = rowDataForList.get(i);
+                    int type = columnTypes.get(columnObject.getKey());
+                    Object value = columnObject.getValue();
+                    Utils.setPStmt(type, targetPreparedStatement, value, i + 1);
+                }
+                // step 2.3 执行 PreparedStatement
+                targetPreparedStatement.executeUpdate();
+                targetPreparedStatement.close();
+                targetConnection.close();
             }
             resultSet.close();
             preparedStatement.close();
