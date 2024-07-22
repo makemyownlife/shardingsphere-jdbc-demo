@@ -21,7 +21,9 @@ public class FullSyncTask {
 
     private final static Logger logger = LoggerFactory.getLogger(FullSyncTask.class);
 
-    private HashMap<String, HashMap<String, Object>> fullStrategy;
+    private FullSyncEnv fullSyncEnv;
+
+    private String tableName;
 
     private DruidDataSource sourceDataSource;
 
@@ -29,35 +31,27 @@ public class FullSyncTask {
 
     private Thread executeThread;
 
-    public FullSyncTask(HashMap<String, HashMap<String, Object>> fullStrategy) {
-        this.fullStrategy = fullStrategy;
+    public FullSyncTask(FullSyncEnv fullSyncEnv, String tableName) {
+        this.fullSyncEnv = fullSyncEnv;
+        this.sourceDataSource = fullSyncEnv.getSourceDataSource();
+        this.targetDataSource = fullSyncEnv.getTargetDataSource();
+        this.tableName = tableName;
     }
 
     public void start() {
-        Map<String, Object> tableConfig = fullStrategy.get("tableConfig"); // 同步表配置
-        // 解析数据源参数
-        HashMap<String, Object> sourceMap = fullStrategy.get("source");  //  源数据库
-        HashMap<String, Object> targetMap = fullStrategy.get("target");  //  目的数据库
-
-        // 初始化数据源连接池
-        this.sourceDataSource = initDataSource(sourceMap);
-        this.targetDataSource = initDataSource(targetMap);
-
         // 开启独立的线程执行任务
         this.executeThread = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    String[] tableNames = StringUtils.split((String) tableConfig.get("tables"), ",");
-                    for (String tableName : tableNames) {
-                        process(tableName);
-                    }
+
+                    process(tableName);
                 } catch (Exception e) {
                     logger.error("process error:", e);
                 }
             }
         });
-        this.executeThread.setName("fullExecuteThread");
+        this.executeThread.setName("fullExecuteThread-" + tableName);
         this.executeThread.start();
     }
 
@@ -122,28 +116,5 @@ public class FullSyncTask {
         logger.info("结束全量同步表：" + tableName + " 耗时:" + (System.currentTimeMillis() - start));
     }
 
-    private DruidDataSource initDataSource(HashMap<String, Object> map) {
-        DruidDataSource dataSource = new DruidDataSource();
-        dataSource.setUrl(String.valueOf(map.get("url")));
-        dataSource.setUsername(String.valueOf(map.get("username")));
-        dataSource.setPassword(String.valueOf(map.get("password")));
-        dataSource.setMinIdle(1);
-        dataSource.setMaxActive(30);
-        try {
-            dataSource.init();
-        } catch (Exception e) {
-            logger.error("init error:", e);
-        }
-        return dataSource;
-    }
-
-    public void stop() {
-        if (sourceDataSource != null) {
-            sourceDataSource.close();
-        }
-        if (targetDataSource != null) {
-            targetDataSource.close();
-        }
-    }
 
 }
