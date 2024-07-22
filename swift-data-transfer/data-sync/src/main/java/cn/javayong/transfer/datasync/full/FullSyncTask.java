@@ -44,7 +44,6 @@ public class FullSyncTask {
             @Override
             public void run() {
                 try {
-
                     process(tableName);
                 } catch (Exception e) {
                     logger.error("process error:", e);
@@ -91,21 +90,28 @@ public class FullSyncTask {
                 len = insertSql.length();
                 insertSql.delete(len - 1, len).append(")");
 
-                // step 2.1  然后将数据插入到目标数据库 , 获取目标数据源连接
-                Connection targetConnection = targetDataSource.getConnection();
-                PreparedStatement targetPreparedStatement = targetConnection.prepareStatement(insertSql.toString());
-                // step 2.2  设置 targetPreparedStatement 的每个字段值
-                List<Map.Entry<String, Object>> rowDataForList = rowData.entrySet().stream().collect(Collectors.toList());
-                for (int i = 0; i < rowDataForList.size(); i++) {
-                    Map.Entry<String, Object> columnObject = rowDataForList.get(i);
-                    int type = columnTypes.get(columnObject.getKey());
-                    Object value = columnObject.getValue();
-                    Utils.setPStmt(type, targetPreparedStatement, value, i + 1);
+                try {
+                    // step 2.1  然后将数据插入到目标数据库 , 获取目标数据源连接
+                    Connection targetConnection = targetDataSource.getConnection();
+                    PreparedStatement targetPreparedStatement = targetConnection.prepareStatement(insertSql.toString());
+                    // step 2.2  设置 targetPreparedStatement 的每个字段值
+                    List<Map.Entry<String, Object>> rowDataForList = rowData.entrySet().stream().collect(Collectors.toList());
+                    for (int i = 0; i < rowDataForList.size(); i++) {
+                        Map.Entry<String, Object> columnObject = rowDataForList.get(i);
+                        int type = columnTypes.get(columnObject.getKey());
+                        Object value = columnObject.getValue();
+                        Utils.setPStmt(type, targetPreparedStatement, value, i + 1);
+                    }
+                    // step 2.3 执行 PreparedStatement
+                    targetPreparedStatement.executeUpdate();
+                    targetPreparedStatement.close();
+                    targetConnection.close();
+                } catch (Exception e) {
+                    if (e.getMessage().contains("Duplicate entry") || e.getMessage().startsWith("ORA-00001:")) {
+                        // 目标数据源 包含该行
+                    }
                 }
-                // step 2.3 执行 PreparedStatement
-                targetPreparedStatement.executeUpdate();
-                targetPreparedStatement.close();
-                targetConnection.close();
+
             }
             resultSet.close();
             preparedStatement.close();
