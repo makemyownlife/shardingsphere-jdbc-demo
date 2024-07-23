@@ -123,6 +123,7 @@ public class FullSyncTask {
             if (e.getMessage().contains("Duplicate entry") || e.getMessage().startsWith("ORA-00001:")) {
                 // 目标数据源 包含该行
             } else {
+                Thread.sleep(1000L);
                 throw e;
             }
         }
