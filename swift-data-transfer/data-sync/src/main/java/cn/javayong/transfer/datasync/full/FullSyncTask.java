@@ -109,6 +109,8 @@ public class FullSyncTask {
                 } catch (Exception e) {
                     if (e.getMessage().contains("Duplicate entry") || e.getMessage().startsWith("ORA-00001:")) {
                         // 目标数据源 包含该行
+                    } else {
+                        throw e;
                     }
                 }
 
