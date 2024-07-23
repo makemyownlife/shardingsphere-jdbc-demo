@@ -90,30 +90,8 @@ public class FullSyncTask {
                 len = insertSql.length();
                 insertSql.delete(len - 1, len).append(")");
 
-                try {
-                    // step 2.1  然后将数据插入到目标数据库 , 获取目标数据源连接
-                    Connection targetConnection = targetDataSource.getConnection();
-                    PreparedStatement targetPreparedStatement = targetConnection.prepareStatement(insertSql.toString());
-                    // step 2.2  设置 targetPreparedStatement 的每个字段值
-                    List<Map.Entry<String, Object>> rowDataForList = rowData.entrySet().stream().collect(Collectors.toList());
-                    for (int i = 0; i < rowDataForList.size(); i++) {
-                        Map.Entry<String, Object> columnObject = rowDataForList.get(i);
-                        int type = columnTypes.get(columnObject.getKey());
-                        Object value = columnObject.getValue();
-                        Utils.setPStmt(type, targetPreparedStatement, value, i + 1);
-                    }
-                    // step 2.3 执行 PreparedStatement
-                    targetPreparedStatement.executeUpdate();
-                    targetPreparedStatement.close();
-                    targetConnection.close();
-                } catch (Exception e) {
-                    if (e.getMessage().contains("Duplicate entry") || e.getMessage().startsWith("ORA-00001:")) {
-                        // 目标数据源 包含该行
-                    } else {
-                        throw e;
-                    }
-                }
-
+                // 写入另一个数据源
+                writeRowDataToTargetDataSource(rowData, columnTypes, insertSql.toString());
             }
             resultSet.close();
             preparedStatement.close();
@@ -122,6 +100,32 @@ public class FullSyncTask {
             logger.error(" process tableName:" + tableName + " occur error:", e);
         }
         logger.info("结束全量同步表：" + tableName + " 耗时:" + (System.currentTimeMillis() - start));
+    }
+
+    private void writeRowDataToTargetDataSource(Map<String, Object> rowData, LinkedHashMap<String, Integer> columnTypes, String insertSql) throws Exception{
+        try {
+            // step 2.1  然后将数据插入到目标数据库 , 获取目标数据源连接
+            Connection targetConnection = targetDataSource.getConnection();
+            PreparedStatement targetPreparedStatement = targetConnection.prepareStatement(insertSql);
+            // step 2.2  设置 targetPreparedStatement 的每个字段值
+            List<Map.Entry<String, Object>> rowDataForList = rowData.entrySet().stream().collect(Collectors.toList());
+            for (int i = 0; i < rowDataForList.size(); i++) {
+                Map.Entry<String, Object> columnObject = rowDataForList.get(i);
+                int type = columnTypes.get(columnObject.getKey());
+                Object value = columnObject.getValue();
+                Utils.setPStmt(type, targetPreparedStatement, value, i + 1);
+            }
+            // step 2.3 执行 PreparedStatement
+            targetPreparedStatement.executeUpdate();
+            targetPreparedStatement.close();
+            targetConnection.close();
+        } catch (Exception e) {
+            if (e.getMessage().contains("Duplicate entry") || e.getMessage().startsWith("ORA-00001:")) {
+                // 目标数据源 包含该行
+            } else {
+                throw e;
+            }
+        }
     }
 
 
