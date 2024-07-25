@@ -57,6 +57,7 @@ public class FullSyncTask {
     private void process(String tableName) {
         long start = System.currentTimeMillis();
         logger.info("开始全量同步表：" + tableName);
+        int count = 0;
         try {
             LinkedHashMap<String, Integer> columnTypes = Utils.getColumnTypes(sourceDataSource, tableName);
             // 构造游标 SQL
@@ -92,6 +93,7 @@ public class FullSyncTask {
 
                 // 写入另一个数据源
                 writeRowDataToTargetDataSource(rowData, columnTypes, insertSql.toString());
+                count++;
             }
             resultSet.close();
             preparedStatement.close();
@@ -99,10 +101,10 @@ public class FullSyncTask {
         } catch (Exception e) {
             logger.error(" process tableName:" + tableName + " occur error:", e);
         }
-        logger.info("结束全量同步表：" + tableName + " 耗时:" + (System.currentTimeMillis() - start));
+        logger.info("结束全量同步表：" + tableName + " 耗时:" + (System.currentTimeMillis() - start) + " 处理记录数:" + count);
     }
 
-    private void writeRowDataToTargetDataSource(Map<String, Object> rowData, LinkedHashMap<String, Integer> columnTypes, String insertSql) throws Exception{
+    private void writeRowDataToTargetDataSource(Map<String, Object> rowData, LinkedHashMap<String, Integer> columnTypes, String insertSql) throws Exception {
         try {
             // step 2.1  然后将数据插入到目标数据库 , 获取目标数据源连接
             Connection targetConnection = targetDataSource.getConnection();

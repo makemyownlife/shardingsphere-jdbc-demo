@@ -11,13 +11,10 @@ import org.slf4j.LoggerFactory;
  * Created by zhangyong on 2024/6/15.
  */
 public class MainApplication {
-
     private final static Logger logger = LoggerFactory.getLogger(MainApplication.class);
-
     public static void main(String[] args) {
         logger.info("开始启动同步服务");
         long start = System.currentTimeMillis();
-
         // 加载配置
         DataSyncConfig dataSyncConfig = YamlLoader.loadConfig();
 
@@ -26,9 +23,7 @@ public class MainApplication {
         fullSyncService.init();
 
         // 启动增量同步
-
-
+        // TODO 增量服务
         logger.info("结束启动同步服务 耗时：" + (System.currentTimeMillis() - start) + "毫秒");
     }
-
 }
