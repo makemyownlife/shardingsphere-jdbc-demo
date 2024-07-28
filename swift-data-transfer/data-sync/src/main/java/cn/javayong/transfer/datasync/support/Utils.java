@@ -39,9 +39,7 @@ public class Utils {
     }
 
     public static LinkedHashMap<String, Integer> getColumnTypes(DataSource dataSource, String tableName) {
-
         LinkedHashMap<String, Integer> columnTypes = new LinkedHashMap<>(16);
-
         Connection sourceConnection = null;
         ResultSet columnsResultSet = null;
         try {
@@ -59,9 +57,6 @@ public class Utils {
                 String columnName = columnsResultSet.getString("COLUMN_NAME");
                 String columnType = columnsResultSet.getString("TYPE_NAME");
                 int dataType = columnsResultSet.getInt("DATA_TYPE");
-
-                // 将 SQL 类型代码转换为类型名称
-                String typeName = getTypeName(dataType);
                 columnTypes.put(columnName, dataType);
             }
         } catch (Exception e) {
