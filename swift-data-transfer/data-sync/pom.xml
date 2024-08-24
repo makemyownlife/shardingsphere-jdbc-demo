@@ -136,6 +136,14 @@
             <version>8.0.22</version>
         </dependency>
 
+        <!-- canal 客户端  start -->
+        <dependency>
+            <groupId>com.alibaba.otter</groupId>
+            <artifactId>canal.client</artifactId>
+            <version>1.1.7</version>
+        </dependency>
+        <!-- canal 客户端  start -->
+
     </dependencies>
 
 </project>
