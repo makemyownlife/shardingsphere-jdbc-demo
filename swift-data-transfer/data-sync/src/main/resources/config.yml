@@ -15,6 +15,7 @@ incrStrategy:
   tableConfig:
     tables: t_ent_order,t_ent_order_detail,t_ent_order_item   # 全量同步表
     switchOpen: true                                          # 是否打开开关
+    nameServer: 127.0.0.1:9876
     topic: new-order-topic                                    # 监听新订单4个分片的队列
   target:                                                     # 目的数据库（写入到老数据库）
     url: jdbc:mysql://127.0.0.1:3306/order_base?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2B8&useTimezone=true&useCursorFetch=true

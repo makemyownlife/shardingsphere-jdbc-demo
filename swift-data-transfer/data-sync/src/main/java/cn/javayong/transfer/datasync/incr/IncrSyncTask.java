@@ -3,8 +3,12 @@ package cn.javayong.transfer.datasync.incr;
 import cn.javayong.transfer.datasync.full.FullSyncEnv;
 import cn.javayong.transfer.datasync.support.Utils;
 import com.alibaba.druid.pool.DruidDataSource;
+import com.alibaba.fastjson2.JSON;
 import com.alibaba.otter.canal.client.CanalConnector;
+import com.alibaba.otter.canal.client.CanalMQConnector;
 import com.alibaba.otter.canal.client.rocketmq.RocketMQCanalConnector;
+import com.alibaba.otter.canal.protocol.FlatMessage;
+import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,6 +18,7 @@ import java.sql.ResultSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -29,20 +34,22 @@ public class IncrSyncTask {
 
     private Thread executeThread;
 
+    private CanalMQConnector canalMQConnector;
+
     public IncrSyncTask(IncrSyncEnv incrSyncEnv) {
         this.incrSyncEnv = incrSyncEnv;
     }
 
     public void start() {
-        CanalConnector canalConnector = new RocketMQCanalConnector(
+        this.canalMQConnector = new RocketMQCanalConnector(
                 incrSyncEnv.getNameServer(),
                 incrSyncEnv.getTopic(),
                 "dataSynIncr-" + incrSyncEnv.getTopic(),
                 BATCH_SIZE,
                 true
         );
-        canalConnector.subscribe("*");
-        canalConnector.connect();
+        this.canalMQConnector.subscribe("*");
+        this.canalMQConnector.connect();
         // 开启独立的线程执行任务
         this.executeThread = new Thread(new Runnable() {
             @Override
@@ -59,8 +66,17 @@ public class IncrSyncTask {
     }
 
     private void process() {
-
-
+        while (true) {
+            List<FlatMessage> flatMessageList = canalMQConnector.getFlatListWithoutAck(500L, TimeUnit.MILLISECONDS);
+            if (CollectionUtils.isNotEmpty(flatMessageList)) {
+                System.out.println("开始收到消息");
+                for (FlatMessage flatMessage : flatMessageList) {
+                    System.out.println(JSON.toJSONString(flatMessage));
+                }
+                System.out.println("结束收到消息");
+            }
+            canalMQConnector.ack();
+        }
     }
 
 }
