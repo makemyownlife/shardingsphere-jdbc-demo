@@ -20,12 +20,28 @@ public class IncrSyncService {
 
     private DataSyncConfig dataSyncConfig;
 
+    private IncrSyncEnv incrSyncEnv;
+
     public IncrSyncService(DataSyncConfig dataSyncConfig) {
         this.dataSyncConfig = dataSyncConfig;
     }
 
     public void init() {
-        HashMap<String, HashMap<String, Object>> fullStrategy = dataSyncConfig.getFullStrategy();
+        HashMap<String, HashMap<String, Object>> fullStrategy = dataSyncConfig.getIncrStrategy();
+        if (!fullStrategy.isEmpty()) {
+            Map<String, Object> tableConfig = dataSyncConfig.getFullStrategy().get("tableConfig"); // 同步表配置
+            // 任务开关是否打开
+            Boolean switchOpen = (Boolean) tableConfig.get("switchOpen");
+            if (switchOpen) {
+                // 解析数据源参数
+                HashMap<String, Object> targetMap = fullStrategy.get("target");  //  目的数据库
+                // 初始化数据源连接池
+                DruidDataSource targetDataSource = initDataSource(targetMap);
+                // 增量环境
+                this.incrSyncEnv = new IncrSyncEnv(targetDataSource);
+
+            }
+        }
     }
 
     //==============================================================================================  set method ====================================================================

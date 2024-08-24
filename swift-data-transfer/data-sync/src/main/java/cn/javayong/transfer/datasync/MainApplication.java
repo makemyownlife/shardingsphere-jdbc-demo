@@ -2,6 +2,7 @@ package cn.javayong.transfer.datasync;
 
 import cn.javayong.transfer.datasync.config.DataSyncConfig;
 import cn.javayong.transfer.datasync.full.FullSyncService;
+import cn.javayong.transfer.datasync.incr.IncrSyncService;
 import cn.javayong.transfer.datasync.support.YamlLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,13 +18,12 @@ public class MainApplication {
         long start = System.currentTimeMillis();
         // 加载配置
         DataSyncConfig dataSyncConfig = YamlLoader.loadConfig();
-
         // 启动全量同步
         FullSyncService fullSyncService = new FullSyncService(dataSyncConfig);
         fullSyncService.init();
-
         // 启动增量同步
-        // TODO 增量服务
+        IncrSyncService incrSyncService = new IncrSyncService(dataSyncConfig);
+        incrSyncService.init();
         logger.info("结束启动同步服务 耗时：" + (System.currentTimeMillis() - start) + "毫秒");
     }
 }
