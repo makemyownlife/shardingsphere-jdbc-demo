@@ -73,6 +73,7 @@ public class IncrSyncTask {
                 for (FlatMessage flatMessage : flatMessageList) {
                     System.out.println(JSON.toJSONString(flatMessage));
                 }
+                // 组装 SQL 语句 
                 System.out.println("结束收到消息");
             }
             canalMQConnector.ack();
