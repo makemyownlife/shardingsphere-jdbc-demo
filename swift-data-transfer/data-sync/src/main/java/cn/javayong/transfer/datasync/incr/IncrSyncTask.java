@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,7 +29,7 @@ public class IncrSyncTask {
 
     private final static Logger logger = LoggerFactory.getLogger(IncrSyncTask.class);
 
-    private final static Integer BATCH_SIZE = 5;
+    private final static Integer BATCH_SIZE = 10;
 
     private IncrSyncEnv incrSyncEnv;
 
@@ -67,20 +68,34 @@ public class IncrSyncTask {
 
     private void process() {
         while (true) {
-            List<FlatMessage> flatMessageList = canalMQConnector.getFlatListWithoutAck(500L, TimeUnit.MILLISECONDS);
-            if (CollectionUtils.isNotEmpty(flatMessageList)) {
-                // 1、过滤循环消息
-                // 2、数据合并
-                // 3、update 转 insert
-                // 4、按新表合并
-                logger.info("开始收到消息");
-                for (FlatMessage flatMessage : flatMessageList) {
-                    List<Map<String, String>> data = flatMessage.getData();
-                    String table = flatMessage.getTable();
+            boolean success = false;
+            try {
+                List<FlatMessage> flatMessageList = canalMQConnector.getFlatListWithoutAck(500L, TimeUnit.MILLISECONDS);
+                if (CollectionUtils.isNotEmpty(flatMessageList)) {
+                    // 表做分组
+                    Map<String, List<FlatMessage>> groupTables = new HashMap<String, List<FlatMessage>>();
+                    // 整体步骤：
+                    // 1、过滤循环消息
+                    // 2、数据合并
+                    // 3、update 转 insert
+                    // 4、按新表合并
+                    logger.info("开始收到消息");
+                    for (FlatMessage flatMessage : flatMessageList) {
+                        logger.info("flatMessage:" + JSON.toJSONString(flatMessage));
+                        List<Map<String, String>> data = flatMessage.getData();
+                        String table = flatMessage.getTable();
+                        List<String> pkNames = flatMessage.getPkNames();
+
+                    }
+                    logger.info("结束收到消息");
+                    success = true;
                 }
-                logger.info("结束收到消息");
+            } catch (Exception e) {
+                canalMQConnector.rollback();
             }
-            canalMQConnector.ack();
+            if (success) {
+                canalMQConnector.ack();
+            }
         }
     }
 
