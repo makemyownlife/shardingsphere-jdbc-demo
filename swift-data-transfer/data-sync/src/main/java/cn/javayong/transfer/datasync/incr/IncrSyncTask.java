@@ -9,6 +9,7 @@ import com.alibaba.otter.canal.client.CanalMQConnector;
 import com.alibaba.otter.canal.client.rocketmq.RocketMQCanalConnector;
 import com.alibaba.otter.canal.protocol.FlatMessage;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,13 +30,15 @@ public class IncrSyncTask {
 
     private final static Logger logger = LoggerFactory.getLogger(IncrSyncTask.class);
 
-    private final static Integer BATCH_SIZE = 10;
+    private final static Integer BATCH_SIZE = 5;
 
     private IncrSyncEnv incrSyncEnv;
 
     private Thread executeThread;
 
     private CanalMQConnector canalMQConnector;
+
+    private volatile byte dateMark = 0;                                 // 0: 未包含染色数据  1：开始染色阶段  2： 染色阶段结束
 
     public IncrSyncTask(IncrSyncEnv incrSyncEnv) {
         this.incrSyncEnv = incrSyncEnv;
@@ -85,7 +88,9 @@ public class IncrSyncTask {
                         List<Map<String, String>> data = flatMessage.getData();
                         String table = flatMessage.getTable();
                         List<String> pkNames = flatMessage.getPkNames();
+                        if ("tb_transaction".equalsIgnoreCase(table)) {
 
+                        }
                     }
                     logger.info("结束收到消息");
                     success = true;
