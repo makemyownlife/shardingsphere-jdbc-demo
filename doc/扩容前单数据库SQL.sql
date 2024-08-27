@@ -56,3 +56,14 @@ CREATE TABLE `t_ent_order_item` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 SET FOREIGN_KEY_CHECKS = 1;
+
+-- ----------------------------
+-- 数据染色(同步使用)
+-- ----------------------------
+CREATE TABLE tb_transaction (
+                                id BIGINT AUTO_INCREMENT PRIMARY KEY,
+                                tablename VARCHAR(255) NOT NULL,
+                                status INT DEFAULT 0,
+                                create_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                                update_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);

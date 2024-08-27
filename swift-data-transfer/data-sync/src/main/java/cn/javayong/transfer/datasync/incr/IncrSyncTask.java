@@ -69,15 +69,15 @@ public class IncrSyncTask {
         while (true) {
             List<FlatMessage> flatMessageList = canalMQConnector.getFlatListWithoutAck(500L, TimeUnit.MILLISECONDS);
             if (CollectionUtils.isNotEmpty(flatMessageList)) {
-                System.out.println("开始收到消息");
-                for (FlatMessage flatMessage : flatMessageList) {
-                    System.out.println(JSON.toJSONString(flatMessage));
-                }
                 // 1、过滤循环消息
                 // 2、数据合并
                 // 3、update 转 insert
                 // 4、按新表合并
-                System.out.println("结束收到消息");
+                logger.info("开始收到消息");
+                for (FlatMessage flatMessage : flatMessageList) {
+                    
+                }
+                logger.info("结束收到消息");
             }
             canalMQConnector.ack();
         }
