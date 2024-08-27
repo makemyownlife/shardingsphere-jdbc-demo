@@ -75,7 +75,8 @@ public class IncrSyncTask {
                 // 4、按新表合并
                 logger.info("开始收到消息");
                 for (FlatMessage flatMessage : flatMessageList) {
-                    
+                    List<Map<String, String>> data = flatMessage.getData();
+                    String table = flatMessage.getTable();
                 }
                 logger.info("结束收到消息");
             }
