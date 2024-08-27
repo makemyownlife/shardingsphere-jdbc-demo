@@ -13,7 +13,7 @@ fullStrategy:
 
 incrStrategy:
   tableConfig:
-    tables: t_ent_order,t_ent_order_detail,t_ent_order_item   # 全量同步表
+    tables: t_ent_order,t_ent_order_detail,t_ent_order_item,tb_transaction   # 全量同步表
     switchOpen: true                                          # 是否打开开关
     nameServer: 127.0.0.1:9876
     topic: new-order-topic                                    # 监听新订单4个分片的队列
