@@ -88,9 +88,7 @@ public class IncrSyncTask {
                         List<Map<String, String>> data = flatMessage.getData();
                         String table = flatMessage.getTable();
                         List<String> pkNames = flatMessage.getPkNames();
-                        if ("tb_transaction".equalsIgnoreCase(table)) {
 
-                        }
                     }
                     logger.info("结束收到消息");
                     success = true;
