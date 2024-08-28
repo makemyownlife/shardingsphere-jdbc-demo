@@ -46,6 +46,8 @@ public class IncrSyncTask {
         this.incrSyncEnv = incrSyncEnv;
     }
 
+    private volatile boolean dataMarking = false;
+
     public void start() {
         try {
             this.litePullConsumer = new DefaultLitePullConsumer("incrDataSyn-" + incrSyncEnv.getTopic());
@@ -78,7 +80,6 @@ public class IncrSyncTask {
     private void process() {
         while (true) {
             boolean success = false;
-            boolean dataComplete = true;
             MessageExt commitMessage = null;
             MessageQueue commitCursor = null;
             try {
@@ -95,7 +96,6 @@ public class IncrSyncTask {
                     // 3、update 转 insert
                     // 4、按新表合并
                     logger.info("开始收到消息");
-                    int dataMark = 0;
                     for (MessageExt messageExt : messageExtList) {
                         FlatMessage flatMessage = JSON.parseObject(messageExt.getBody(), FlatMessage.class);
                         logger.info("flatMessage:" + JSON.toJSONString(flatMessage));
@@ -104,7 +104,7 @@ public class IncrSyncTask {
                         List<String> pkNames = flatMessage.getPkNames();
 
                         if (!table.equals("tb_transaction")) {
-                            if (dataMark == 0) {
+                            if (!dataMarking) {
                                 List<FlatMessage> tableItems = tableGroup.get(table);
                                 if (tableItems == null) {
                                     tableItems = new ArrayList<>();
@@ -116,28 +116,22 @@ public class IncrSyncTask {
                             // 当遇到 table = order 时，且 status = 1 则表明是 染色数据 开始部分
                             Map<String, String> item = data.get(0);
                             if (item.get("status").equals("1") && flatMessage.getType().equals("UPDATE")) {
-                                dataMark++;
+                                dataMarking = true;
                             }
                             if (item.get("status").equals("0") && flatMessage.getType().equals("UPDATE")) {
-                                dataMark--;
+                                dataMarking = false;
                             }
                         }
                     }
 
-                    if (dataMark == 0) {
-                        dataComplete = true;
-                    } else {
-                        dataComplete = false;
-                    }
-
                     logger.info("结束收到消息");
 
-                    if (MapUtils.isNotEmpty(tableGroup) && dataComplete) {
+                    if (MapUtils.isNotEmpty(tableGroup)) {
                         Connection targetConnection = incrSyncEnv.getTargetDataSource().getConnection();
                         targetConnection.setAutoCommit(false);
                         // STEP 1: 首先将事务染色表 状态修改为 1
                         dataMarkTransaction(targetConnection, 1);
-                        //STEP 2:  处理真实的去掉数据染色部分数据
+                        // STEP 2:  处理真实的去掉数据染色部分数据
                         for (Map.Entry<String, List<FlatMessage>> entry : tableGroup.entrySet()) {
                             String tableName = entry.getKey();
                             List<FlatMessage> messages = entry.getValue();
@@ -151,7 +145,7 @@ public class IncrSyncTask {
                     }
 
                     success = true;
-                    if (success && dataComplete) {
+                    if (success) {
                         litePullConsumer.commitSync();
                     }
                 }
@@ -159,11 +153,7 @@ public class IncrSyncTask {
                 logger.error("process error:", e);
                 success = false;
             }
-            if (!success || !dataComplete) {
-                if (!dataComplete) {
-                    litePullConsumer.setPullBatchSize(50);
-                    logger.warn("数据包不完整，需要重新获取！");
-                }
+            if (!success) {
                 if (commitCursor != null && commitMessage != null) {
                     try {
                         litePullConsumer.seek(commitCursor, commitMessage.getQueueOffset());
@@ -178,17 +168,38 @@ public class IncrSyncTask {
 
     private void writeRowDataToTargetDataSource(Connection connection, FlatMessage flatMessage) throws Exception {
         List<Map<String, String>> data = flatMessage.getData();
-        String type = flatMessage.getType();
-        if ("UPDATE".equals(type)) {
+        Map<String, Integer> sqlType = flatMessage.getSqlType();
+        if ("UPDATE".equals(flatMessage.getType())) {
             for (Map<String, String> item : data) {
+                Map<String, String> rowData = new LinkedHashMap<>();
+                rowData.putAll(item);
+                // 组装 UPDATE SQL
                 StringBuilder updateSql = new StringBuilder();
                 updateSql.append("UPDATE ").append(flatMessage.getTable()).append(" SET ");
-                item.forEach((key, value) -> {
-                    updateSql.append(key + "= ?,");
+
+                List<String> params = new ArrayList<>();
+                rowData.forEach((key, value) -> {
+                    if (!"id".equals(key)) {
+                        params.add(key);
+                        updateSql.append(key + "= ?,");
+                    }
                 });
-                System.out.println(updateSql);
                 int len = updateSql.length();
-                updateSql.delete(len - 2, len).append(" WHERE ");
+                updateSql.delete(len - 1, len).append(" WHERE id = ?");
+                System.out.println(updateSql);
+                params.add("id");
+
+                // 设置预编译
+                PreparedStatement targetPreparedStatement = connection.prepareStatement(updateSql.toString());
+                // step 2.2  设置 targetPreparedStatement 的每个字段值
+                for (int i = 0; i < params.size(); i++) {
+                    String columnName = params.get(i);
+                    String value = rowData.get(columnName);
+                    Integer type = sqlType.get(columnName);
+                    Utils.setPStmt(type, targetPreparedStatement, value, i + 1);
+                }
+                targetPreparedStatement.executeUpdate();
+                targetPreparedStatement.close();
             }
         }
     }
