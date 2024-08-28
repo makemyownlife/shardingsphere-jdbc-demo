@@ -34,7 +34,7 @@ public class IncrSyncTask {
 
     private final static Logger logger = LoggerFactory.getLogger(IncrSyncTask.class);
 
-    private final static Integer BATCH_SIZE = 5;
+    private final static Integer BATCH_SIZE = 2;
 
     private IncrSyncEnv incrSyncEnv;
 
@@ -51,7 +51,7 @@ public class IncrSyncTask {
             this.litePullConsumer = new DefaultLitePullConsumer("incrDataSyn-" + incrSyncEnv.getTopic());
             litePullConsumer.setNamesrvAddr(this.incrSyncEnv.getNameServer());
             litePullConsumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_LAST_OFFSET);
-            litePullConsumer.setPullBatchSize(50);
+            litePullConsumer.setPullBatchSize(BATCH_SIZE);
             // 订阅主题 TopicTest
             litePullConsumer.subscribe(this.incrSyncEnv.getTopic(), "*");
             // 开启独立的线程执行任务
@@ -161,12 +161,13 @@ public class IncrSyncTask {
             }
             if (!success || !dataComplete) {
                 if (!dataComplete) {
+                    litePullConsumer.setPullBatchSize(50);
                     logger.warn("数据包不完整，需要重新获取！");
                 }
                 if (commitCursor != null && commitMessage != null) {
                     try {
                         litePullConsumer.seek(commitCursor, commitMessage.getQueueOffset());
-                        Thread.sleep(300L);
+                        Thread.sleep(500L);
                     } catch (Exception e) {
                         logger.error("seek error:", e);
                     }
