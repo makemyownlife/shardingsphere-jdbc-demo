@@ -133,7 +133,6 @@ public class IncrSyncTask {
                         dataMarkTransaction(targetConnection, 1);
                         // STEP 2:  处理真实的去掉数据染色部分数据
                         for (Map.Entry<String, List<FlatMessage>> entry : tableGroup.entrySet()) {
-                            String tableName = entry.getKey();
                             List<FlatMessage> messages = entry.getValue();
                             for (FlatMessage flatMessage : messages) {
                                 writeRowDataToTargetDataSource(targetConnection, flatMessage);
