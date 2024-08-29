@@ -68,9 +68,7 @@ CREATE TABLE tb_transaction (
                                 update_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-INSERT INTO `tb_transaction` (`id`, `tablename`, `status`, `create_time`, `update_time`) VALUES (1, 't_ent_order', 0, '2024-08-27 11:24:23', '2024-08-27 11:24:23');
-INSERT INTO `tb_transaction` (`id`, `tablename`, `status`, `create_time`, `update_time`) VALUES (2, 't_ent_order_detail', 0, '2024-08-27 11:33:00', '2024-08-27 11:35:32');
-INSERT INTO `tb_transaction` (`id`, `tablename`, `status`, `create_time`, `update_time`) VALUES (3, 't_ent_order_item', 0, '2024-08-27 11:35:25', '2024-08-27 11:35:38');
+INSERT INTO `tb_transaction` (`id`, `tablename`, `status`, `create_time`, `update_time`) VALUES (1, 'order', 0, '2024-08-27 11:24:23', '2024-08-27 11:24:23');
 -- ----------------------------
 -- 数据染色(同步使用) end
 -- ----------------------------

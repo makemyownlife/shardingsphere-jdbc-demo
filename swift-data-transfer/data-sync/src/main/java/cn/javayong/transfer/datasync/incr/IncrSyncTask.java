@@ -85,7 +85,6 @@ public class IncrSyncTask {
             try {
                 List<MessageExt> messageExtList = litePullConsumer.poll(1500);
                 if (CollectionUtils.isNotEmpty(messageExtList)) {
-                    Map<String, List<FlatMessage>> tableGroup = new HashMap<>();
 
                     commitMessage = messageExtList.get(0);
                     commitCursor = new MessageQueue(commitMessage.getTopic(), commitMessage.getBrokerName(), commitMessage.getQueueId());
@@ -96,6 +95,7 @@ public class IncrSyncTask {
                     // 3、update 转 insert
                     // 4、按新表合并
                     logger.info("开始收到消息");
+                    Map<String, List<FlatMessage>> tableGroup = new HashMap<>();
                     for (MessageExt messageExt : messageExtList) {
                         FlatMessage flatMessage = JSON.parseObject(messageExt.getBody(), FlatMessage.class);
                         logger.info("flatMessage:" + JSON.toJSONString(flatMessage));
