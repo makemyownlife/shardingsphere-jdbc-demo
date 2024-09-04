@@ -78,6 +78,7 @@ public class IncrSyncTask {
     }
 
     private void process() {
+        this.dataMarking = fetchDataMarkingFlagFromCenterStore(this.incrSyncEnv.getTopic());
         while (true) {
             boolean success = false;
             MessageExt commitMessage = null;
@@ -144,9 +145,14 @@ public class IncrSyncTask {
                     }
 
                     success = true;
+
+                    // 处理染色标识
+                    commitDataDataMarkingFlag(incrSyncEnv.getTopic(), dataMarking);
+
                     if (success) {
                         litePullConsumer.commitSync();
                     }
+
                 }
             } catch (Exception e) {
                 logger.error("process error:", e);
@@ -208,6 +214,15 @@ public class IncrSyncTask {
         String sql = "update tb_transaction set status = " + status + " where tablename = 'order'";
         statement.executeUpdate(sql);
         statement.close();
+    }
+
+    private boolean fetchDataMarkingFlagFromCenterStore(String topic) {
+        // TODO 从 zookeeper 或者 MySQL 查询整个存储当前增量同步任务是否处于染色中
+        return false;
+    }
+
+    private void commitDataDataMarkingFlag(String topic, boolean dataMarking) {
+        // TODO 写入到 zookeeper 或者 MySQL
     }
 
 }
