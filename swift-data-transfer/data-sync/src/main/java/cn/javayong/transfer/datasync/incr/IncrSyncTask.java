@@ -119,6 +119,7 @@ public class IncrSyncTask {
                             if (item.get("status").equals("1") && flatMessage.getType().equals("UPDATE")) {
                                 dataMarking = true;
                             }
+                            // 当遇到 table = order 时，且 status = 0 则表明是 染色数据 结束
                             if (item.get("status").equals("0") && flatMessage.getType().equals("UPDATE")) {
                                 dataMarking = false;
                             }
