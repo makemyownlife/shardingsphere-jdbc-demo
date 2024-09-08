@@ -123,5 +123,14 @@
         a.id = b.order_id
     </select>
 
+    <select id="queryOrderList" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        <bind name="start" value="(page - 1) * 5"/>
+        <bind name="end" value="5"/>
+        select * from t_ent_order a   LIMIT #{start}, #{end}
+    </select>
+
+    <select id="queryOrderCount" resultType="java.lang.Integer">
+        select count(*) from t_ent_order a
+    </select>
 
 </mapper>

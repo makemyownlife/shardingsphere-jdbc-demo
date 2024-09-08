@@ -31,6 +31,14 @@ public class OrderService {
         return orderMapper.queryOrder(orderId);
     }
 
+    public List<Map<String, Object>> queryOrderList(Integer page) {
+        return orderMapper.queryOrderList(page);
+    }
+
+    public Integer queryOrderCount() {
+        return orderMapper.queryOrderCount();
+    }
+
     @Transactional
     public Long save() {
         Long entId = 11215L;

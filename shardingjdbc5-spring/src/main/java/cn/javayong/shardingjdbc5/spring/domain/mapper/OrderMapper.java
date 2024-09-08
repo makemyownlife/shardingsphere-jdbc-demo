@@ -26,4 +26,8 @@ public interface OrderMapper {
 
     List<Map<String,Object>> queryOrderListDemo();
 
+    List<Map<String,Object>> queryOrderList(Integer page);
+
+    Integer queryOrderCount();
+
 }
