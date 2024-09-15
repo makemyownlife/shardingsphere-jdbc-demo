@@ -198,3 +198,5 @@ CREATE TABLE `t_city` (
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='城市表';
 
+INSERT INTO `t_city` (`id`, `city_name`, `region_code`, `create_time`, `update_time`)
+VALUES (1, '北京', '0000001', NOW(), NOW());
