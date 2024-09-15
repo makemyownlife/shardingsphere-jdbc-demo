@@ -188,3 +188,13 @@ CREATE TABLE tb_transaction (
                                 create_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                                 update_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
+
+CREATE TABLE `t_city` (
+    `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+    `city_name` varchar(100) NOT NULL COMMENT '城市名称',
+    `region_code` varchar(45) NOT NULL COMMENT '区域编码',
+    `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='城市表';
+
