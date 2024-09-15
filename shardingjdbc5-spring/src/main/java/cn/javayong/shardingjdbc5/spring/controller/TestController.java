@@ -70,4 +70,14 @@ public class TestController {
         return ResponseEntity.successResult(list);
     }
 
+    @GetMapping("/queryBroadCastTable")
+    @ApiOperation("queryBroadCastTable")
+    public ResponseEntity queryBroadCastTable() {
+        // step 1： 先查询
+        List list = orderService.queryCityList();
+        // step 2: 后修改
+        orderService.updateCity();
+        return ResponseEntity.successResult(list);
+    }
+
 }

@@ -79,7 +79,7 @@ rules:
   # 广播
   - !BROADCAST
     tables:
-      - t_address
+      - t_city
 
 props:
   # 日志显示 SQL

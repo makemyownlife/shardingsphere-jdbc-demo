@@ -189,14 +189,19 @@ CREATE TABLE tb_transaction (
                                 update_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
+DROP TABLE IF EXISTS `t_city`;
+
 CREATE TABLE `t_city` (
     `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键ID',
     `city_name` varchar(100) NOT NULL COMMENT '城市名称',
     `region_code` varchar(45) NOT NULL COMMENT '区域编码',
     `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    `remark` varchar(200) DEFAULT NULL COMMENT '备注',
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='城市表';
 
+
 INSERT INTO `t_city` (`id`, `city_name`, `region_code`, `create_time`, `update_time`)
 VALUES (1, '北京', '0000001', NOW(), NOW());
+

@@ -133,4 +133,12 @@
         select count(*) from t_ent_order a
     </select>
 
+    <select id="queryCityList" resultType="java.util.HashMap">
+        select * from t_city
+    </select>
+
+    <update id="updateCity">
+        update t_city set remark = 'test' where id = 1
+    </update>
+
 </mapper>

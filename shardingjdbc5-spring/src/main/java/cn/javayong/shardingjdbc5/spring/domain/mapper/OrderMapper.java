@@ -30,4 +30,9 @@ public interface OrderMapper {
 
     Integer queryOrderCount();
 
+    // 查询城市列表
+    List<Map<String,Object>> queryCityList();
+
+    Integer updateCity();
+
 }

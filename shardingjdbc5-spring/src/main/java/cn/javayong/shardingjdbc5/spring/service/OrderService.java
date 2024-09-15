@@ -147,4 +147,13 @@ public class OrderService {
         return orderMapper.queryOrderListDemo();
     }
 
+    // 查询城市列表
+    public List queryCityList() {
+        return orderMapper.queryCityList();
+    }
+
+    public Integer updateCity() {
+        return orderMapper.updateCity();
+    }
+
 }
